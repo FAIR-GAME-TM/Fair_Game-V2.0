@@ -1,0 +1,14 @@
+[settings]
+repository = "Fair-Game_Offical"
+entry_file = "buildComm.js"
+output_dir = "dist"
+
+[build]
+command = "node buildComm.js"
+publish = "dist/"
+base ="Fair-Game_Offical-main"
+
+[[redirects]]
+  from = "/*"
+  to = "Fair-Game_Offical-main/login.html"
+  status = 200
