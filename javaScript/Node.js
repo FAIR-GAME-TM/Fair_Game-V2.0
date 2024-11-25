@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const RECAPTCHA_SECRET_KEY = '6LfU-IkqAAAAAPZbhLqbFitQPr6ReLwKc4tLPpqY';
+const RECAPTCHA_SECRET_KEY = '6LcM-4kqAAAAADMEhmAxcnM5Y4wvGCiRVepv573x';
 
 app.post('/submit-create-account', async (req, res) => {
     const { username, email, password, 'g-recaptcha-response': captchaResponse } = req.body;
