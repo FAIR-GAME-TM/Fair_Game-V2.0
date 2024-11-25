@@ -104,7 +104,10 @@ body {
 .login-container input[type="submit"]:hover {
     background-color: #ff0000;
 }
-
+.g-recaptcha {
+    margin: 20px 0;
+    text-align: center;
+}
 #errorMessage {
     color: red;
     font-size: 14px;
