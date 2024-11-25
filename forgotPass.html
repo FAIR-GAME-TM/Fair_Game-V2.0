@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CreateAccount.css">
+    <title>Fair-Game™ | Forgot Password</title>
+    
+    <!-- Header -->
+    <header>
+        <img class="logoImg" src="./Images/logo/Artboard_1.png" alt=""/>
+        <img class="logo" src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo"/>
+        <div class="nav">
+            <a class="navItem" href="./index.html">Home</a>
+            <a class="navItem" href="./shop.html">Shop</a>
+            <a class="navItem" href="./Blog.html">Blog</a>
+            <a class="navItem Repository" href="./login.html">Log In</a>
+            <a class="contact" href="./contact.html">Contact Us</a>
+        </div>
+    </header>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Forgot Password?</h2>
+        <p>Enter your email address and we'll send you instructions to reset your password.</p>
+        <form id="forgot-password-form" action="/send-reset-link" method="post">
+            <input id="email" type="email" name="email" placeholder="Enter your email" required>
+            <input type="submit" value="Send Reset Link">
+        </form>
+        <p><a href="login.html">Back to Login</a></p>
+        <p id="errorMessage" class="error-message"></p>
+    </div>
+
+    <script src="./javaScript/createAccount.js"></script>
+</body>
+</html>
