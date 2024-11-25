@@ -23,9 +23,7 @@ app.post('/submit-create-account', async (req, res) => {
         return res.status(400).send('Failed CAPTCHA verification. Please try again.');
     }
 
-    // Process user registration (e.g., save to database)
-    // ...
-
+   
     res.status(200).send('Account created successfully!');
 });
 
