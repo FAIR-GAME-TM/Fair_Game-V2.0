@@ -50,30 +50,32 @@ header{
     background-color: rgb(243, 0, 0);
     border: 2px solid rgb(255, 255, 255);
 }
-.create-account-btn {
-    display: inline-block;
-    font-size: 18px;
+.additional-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5%;
+}
+
+.link-button {
+    padding: 8px 15px;
+    font-size: 16px;
     font-weight: bold;
     text-decoration: none;
-    color: #007bff;
-    padding: 10px 20px;
-    border: 2px solid #007bff;
-    border-radius: 5px;
-    background-color: #ffffff;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    cursor: pointer;
+    color: black;
+    border: 2px solid #000;
+    border-radius: 4px;
+    background-color: white;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
-.create-account-btn:hover {
-    background-color: #007bff;
-    color: #ffffff;
-    border-color: #0056b3;
+.link-button:hover {
+    color: white;
+    background-color: red;
+    border-color: white;
 }
 
-.create-account-btn:active {
-    background-color: #0056b3;
-    border-color: #004494;
-}
 
 
 .Repository{
