@@ -1,7 +1,5 @@
-const { MongoClient } = require("mongodb");
+const connectDB = require("./db");
 const bcrypt = require("bcrypt");
-
-const uri = "mongodb+srv://fairgameAdmin:fAIRGAMEISCOOL2024@fairgamecluster.dli7d.mongodb.net/?retryWrites=true&w=majority&appName=FairGameCluster";
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
@@ -14,13 +12,8 @@ exports.handler = async (event, context) => {
     return { statusCode: 400, body: "Username and password are required." };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password for security
-
   try {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-
-    const db = client.db("Fair_Game");
+    const db = await connectDB();
     const collection = db.collection("users");
 
     // Check if the username already exists
@@ -29,7 +22,8 @@ exports.handler = async (event, context) => {
       return { statusCode: 400, body: "Username already exists." };
     }
 
-    // Insert the new user into the database
+    // Hash the password and insert the new user
+    const hashedPassword = await bcrypt.hash(password, 10);
     const result = await collection.insertOne({ username, password: hashedPassword });
 
     return {
@@ -37,6 +31,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ message: "Account created successfully!", userId: result.insertedId }),
     };
   } catch (error) {
-    return { statusCode: 500, body: `Server error: ${error.message}` };
+    console.error("Error creating account:", error.message);
+    return { statusCode: 500, body: "Internal server error." };
   }
 };

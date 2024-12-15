@@ -1,7 +1,5 @@
-const { MongoClient } = require("mongodb");
+const connectDB = require("./db");
 const bcrypt = require("bcrypt");
-
-const uri = "mongodb+srv://fairgameAdmin:fAIRGAMEISCOOL2024@fairgamecluster.dli7d.mongodb.net/?retryWrites=true&w=majority&appName=FairGameCluster";
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
@@ -15,10 +13,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-
-    const db = client.db("Fair_Game");
+    const db = await connectDB();
     const collection = db.collection("users");
 
     // Find the user in the database
@@ -33,6 +28,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ message: "Login successful!" }),
     };
   } catch (error) {
-    return { statusCode: 500, body: `Server error: ${error.message}` };
+    console.error("Error logging in:", error.message);
+    return { statusCode: 500, body: "Internal server error." };
   }
 };

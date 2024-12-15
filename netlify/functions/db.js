@@ -1,35 +1,24 @@
-require("dotenv").config();
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
+
+let cachedClient = null; // Cache the MongoDB client
+let cachedDb = null; // Cache the database instance
 
 const uri = "mongodb+srv://fairgameAdmin:fAIRGAMEISCOOL2024@fairgamecluster.dli7d.mongodb.net/?retryWrites=true&w=majority&appName=FairGameCluster";
 
-exports.handler = async (event, context) => {
-    let client;
+async function connectDB() {
+  if (cachedDb) {
+    console.log("Using cached database connection.");
+    return cachedDb;
+  }
 
-    try {
-        //Connect to MongoDB
-        client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-        await client.connect();
+  if (!cachedClient) {
+    console.log("Creating new MongoDB client connection...");
+    cachedClient = new MongoClient(uri);
+    await cachedClient.connect();
+  }
 
-        //Access database and collection
-        const db = client.db("Fair_Game");
-        const collection = db.collection("users");
+  cachedDb = cachedClient.db("Fair_Game");
+  return cachedDb;
+}
 
-        //Fetch data from MongoDB
-        const items = await collection.find({}).toArray();
-
-        //Return the fetched data
-        return {
-            statusCode: 200,
-            body: JSON.stringify(items),
-        };
-    } catch (error) {
-        console.error("MongoDB connection error:", error.message);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "Failed to fetch data"}),
-        };
-    } finally {
-        if (client) await client.close();
-    }
-};
+module.exports = connectDB;
