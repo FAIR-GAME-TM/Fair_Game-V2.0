@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- StyleSheet -->
     <link rel="stylesheet" href="./Styles/CreateAccount.css">
-
-    <!-- Tab Name &Logo -->
-    <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon">
     <title>Fair-Game™ | Create Account</title>
-
-    <!-- Header -->
+</head>
+<body>
     <header>
-        <img class="logoImg" src="./Images/logo/Artboard_1.png" alt=""/>
-        <img class="logo" src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo"/>
+        <img class="logoImg" src="./Images/logo/Artboard_1.png" alt="">
+        <img class="logo" src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo">
         <div class="nav">
             <a class="navItem" href="./index.html">Home</a>
             <a class="navItem" href="./shop.html">Shop</a>
@@ -23,26 +19,22 @@
             <a class="contact" href="./contact.html">Contact Us</a>
         </div>
     </header>
-</head>
 
-<body>
     <div class="login-container">
         <h2>Create Account</h2>
-        <form id="create-account-form" action="/submit-create-account" method="post">
+        <form id="create-account-form">
             <input id="username" type="text" name="username" placeholder="Username" required>
             <input id="email" type="email" name="email" placeholder="Email" required>
             <input id="password" type="password" name="password" placeholder="Password" required>
             <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required>
             <input type="submit" value="Create Account">
-            <div class="g-recaptcha" data-sitekey="6LcM-4kqAAAAAJxMB3KAj-37QDn4Ux85vsBqBcfA"></div>
+            <div class="g-recaptcha" data-sitekey="your-recaptcha-site-key"></div>
         </form>
         <p id="errorMessage" class="error-message"></p>
-        <p>Already have an account? <a href="login.html">Login here</a></p>
+        <p>Already have an account? <a href="./login.html">Login here</a></p>
     </div>
 
-    <script src="./javaScript/createAccount.js">
-     src="https://www.google.com/recaptcha/api.js" async defer>
-    </script>
-    
+    <script src="./javaScript/createAccount.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>
