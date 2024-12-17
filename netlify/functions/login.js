@@ -1,5 +1,6 @@
 const connectDB = require("./db");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {

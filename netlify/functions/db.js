@@ -1,11 +1,15 @@
 const { MongoClient } = require("mongodb");
+require("dotenv").config();
 
 let cachedClient = null; // Cache the MongoDB client
 let cachedDb = null; // Cache the database instance
 
-const uri = "mongodb+srv://fairgameAdmin:fAIRGAMEISCOOL2024@fairgamecluster.dli7d.mongodb.net/?retryWrites=true&w=majority&appName=FairGameCluster";
+const uri = process.env.MONGODB_URI;
 
 async function connectDB() {
+  if (!uri) {
+    throw new Error("Missing MongoDB connection string in environmental vaiables.");
+  }
   if (cachedDb) {
     console.log("Using cached database connection.");
     return cachedDb;
