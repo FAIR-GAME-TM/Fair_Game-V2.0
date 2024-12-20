@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Link Styles -->
+  <link rel="stylesheet" href="./Styles/index.css">
+  <link rel="stylesheet" href="./Styles/showcase.css"> <!-- Additional showcase-specific styles -->
+
+  <!-- Tab Name & Logo -->
+  <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon">
+  <title>Fair Game | Showcase</title>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img class="logoImg" src="./Images/logo/Artboard_1.png" alt="Fair Game Logo">
+    <img class="logo" src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo">
+    <div class="nav">
+      <a class="navItem" href="./index.html">Home</a>
+      <a class="navItem" href="./shop.html">Shop</a>
+      <a class="navItem" href="./Blog.html">Blog</a>
+      <a class="navItem" href="./login.html">Log In</a>
+      <a class="contact" href="./contact.html">Contact Us</a>
+      <a class="navItem" href="./showcase.html" style="font-weight: bold; color: #ff7f50;">Showcase</a>
+    </div>
+  </header>
+
+  <!-- Top Section -->
+  <div class="showcase-hero">
+    <h1>Fair Game Showcase</h1>
+    <p>Explore the integration of MongoDB and dynamic web development in this interactive showcase.</p>
+  </div>
+
+  <!-- About Section -->
+  <section class="showcase-about">
+    <h2>About the Showcase</h2>
+    <p>
+      This page demonstrates database integration by dynamically fetching and displaying data from our MongoDB collections. 
+      Use the buttons below to view users, garments, and more.
+    </p>
+  </section>
+
+  <!-- Interactive Section -->
+  <section class="showcase-interactive">
+    <h2>Database Features</h2>
+    <div class="button-group">
+      <button id="fetchUsers" class="showcase-btn">View All Users</button>
+      <button id="fetchGarments" class="showcase-btn">View All Garments</button>
+    </div>
+    <div id="output" class="showcase-output"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Fair Game. All rights reserved.</p>
+  </footer>
+
+  <script src="./javaScript/showcase.js"></script>
+</body>
+</html>

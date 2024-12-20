@@ -1,0 +1,86 @@
+/* Hero Section */
+.showcase-hero {
+    background: url('./Images/Background/showcase-bg.jpg') no-repeat center center/cover;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .showcase-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .showcase-hero p {
+    font-size: 1.2rem;
+  }
+  
+  /* About Section */
+  .showcase-about {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .showcase-about h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  .showcase-about p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+  /* Interactive Section */
+  .showcase-interactive {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .showcase-interactive h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .showcase-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .showcase-btn:hover {
+    background-color: #555;
+  }
+  
+  /* Output Section */
+  .showcase-output {
+    margin-top: 30px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  
