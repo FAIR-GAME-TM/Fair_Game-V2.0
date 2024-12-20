@@ -21,7 +21,7 @@ document.getElementById('fetchGarments').addEventListener('click', () => {
       outputDiv.innerHTML = '<h3>Garments</h3>';
       data.forEach(garment => {
         const garmentDiv = document.createElement('div');
-        garmentDiv.innerHTML = `<p><strong>Garment Name:</strong> ${garment.name}</p>`;
+        garmentDiv.innerHTML = `<p><strong>Garment Name:</strong> ${garment.garmentName}</p>`;
         outputDiv.appendChild(garmentDiv);
       });
     })
