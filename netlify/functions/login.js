@@ -27,8 +27,8 @@ exports.handler = async (event, context) => {
 
     //Sign a JWT
     const token = jwt.sign(
-      { id: used._id, username: user.username },
-      process.env.JWT_SECRET || 'default_secret_key',
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET || "default_secret_key",
       { expiresIn: "2h" }
     );
 
