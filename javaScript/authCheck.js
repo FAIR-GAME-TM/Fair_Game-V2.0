@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Make sure the element with id 'loginButton' exists on the page
     const loginButton = document.getElementById('loginButton');
     if (!loginButton) return;
   
@@ -9,11 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return res.json();
       })
       .then(data => {
-        // Update the login button with the username
+        // Update button text to show the username
         loginButton.textContent = data.username;
+        // Update the link so that clicking it takes you to the logged-in profile page
+        loginButton.href = "./portfolio.html"; // Change to profile.html if you create one
       })
       .catch(err => {
-        console.log('User not logged in:', err);
+        console.log("User not logged in:", err);
       });
   });
   
