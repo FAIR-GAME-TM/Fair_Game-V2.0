@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garment Details</title>
+  <link rel="stylesheet" href="./Styles/garmentDetails.css" />
+</head>
+<body>
+  <header>
+    <!-- Navigation goes here -->
+  </header>
+
+  <main>
+    <div id="garmentContainer">
+      <!-- Garment details will be displayed here -->
+    </div>
+  </main>
+
+  <script>
+    // Utility function to get query parameter values
+    function getQueryParam(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    // Get the NFC tag ID from the URL
+    const nfcTagId = getQueryParam("nfcTagId");
+
+    if (!nfcTagId) {
+      document.getElementById("garmentContainer").innerText = "No garment information provided.";
+    } else {
+      // Call the secure endpoint to get garment details
+      fetch(`/.netlify/functions/getGarmentByNfc?nfcTagId=${encodeURIComponent(nfcTagId)}`)
+        .then(response => {
+          if (!response.ok) {
+            if (response.status === 401) {
+              // Not logged in: redirect to login page
+              window.location.href = "./login.html";
+            } else if (response.status === 403) {
+              // Garment not purchased or user does not own it
+              document.getElementById("garmentContainer").innerText = "Access restricted: " + response.statusText;
+            } else {
+              throw new Error("Error retrieving garment");
+            }
+          }
+          return response.json();
+        })
+        .then(garment => {
+          // Render garment details
+          const container = document.getElementById("garmentContainer");
+          container.innerHTML = `
+            <h2>${garment.garmentName}</h2>
+            <p>Fabric Type: ${garment.fabricType}</p>
+            <p>Fabric GSM: ${garment.fabricGSM}</p>
+            <!-- Add any additional garment details here -->
+          `;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("garmentContainer").innerText = "An error occurred while retrieving garment details.";
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+/* garmentDetails.css */
+
+/* Reset some default margins/padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Header styling for navigation if needed */
+  header {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Main content area styling */
+  main {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Container for garment details */
+  #garmentContainer {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Garment title */
+  #garmentContainer h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+  }
+  
+  /* Garment details paragraphs */
+  #garmentContainer p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+  
+  /* Optional: Styling for error or restricted messages */
+  .error-message,
+  .access-restricted {
+    color: #a00;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
