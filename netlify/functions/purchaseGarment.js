@@ -1,59 +1,70 @@
 const connectDB = require("./db");
-const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 require("dotenv").config();
 
 exports.handler = async (event, context) => {
-  // Ensure the method is POST
+  // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  // Parse the request body (assumed to be JSON)
-  const { nfcTagId } = JSON.parse(event.body);
-  if (!nfcTagId) {
-    return { statusCode: 400, body: "NFC tag ID is required" };
+  // Retrieve the Shopify HMAC header and raw request body
+  const hmacHeader = event.headers["x-shopify-hmac-sha256"];
+  const requestBody = event.body; // This should be the raw JSON string
+
+  // Verify webhook signature
+  const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+  const hash = crypto
+    .createHmac("sha256", secret)
+    .update(requestBody, "utf8")
+    .digest("base64");
+
+  if (hash !== hmacHeader) {
+    return { statusCode: 401, body: "Unauthorized" };
   }
 
-  // Extract token from cookies (assuming it's stored as an HttpOnly cookie)
-  const cookieHeader = event.headers.cookie;
-  if (!cookieHeader) {
-    return { statusCode: 401, body: "Not authenticated" };
-  }
-  const tokenCookie = cookieHeader.split(";").find(c => c.trim().startsWith("token="));
-  if (!tokenCookie) {
-    return { statusCode: 401, body: "Not authenticated" };
-  }
-  const token = tokenCookie.split("=")[1];
-
-  let decoded;
+  // Parse the order from the request body
+  let order;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET || "default_secret_key");
-  } catch (error) {
-    return { statusCode: 401, body: "Not authenticated" };
+    order = JSON.parse(requestBody);
+  } catch (err) {
+    return { statusCode: 400, body: "Invalid JSON" };
   }
-  
-  // At this point, you have the buyer's username from the decoded token
-  const buyerUsername = decoded.username;
-  
+
+  // Extract buyer information; here we use the customer's email as their identifier
+  const buyerUsername = order.customer ? order.customer.email : null;
+  if (!buyerUsername) {
+    return { statusCode: 400, body: "Missing customer information" };
+  }
+
+  // Connect to MongoDB and update garments that match purchased items
   try {
     const db = await connectDB();
-    // Update the garment document with the buyer's username as owner
-    const result = await db.collection("scholargarments").updateOne(
-      { nfcTagId: nfcTagId },
-      { $set: { owner: buyerUsername } }
-    );
-    
-    // If no document was updated, the garment might not exist
-    if (result.matchedCount === 0) {
-      return { statusCode: 404, body: "Garment not found" };
+    const garmentsCollection = db.collection("scholargarments");
+
+    // Iterate through each line item in the order.
+    // Here, we assume that the product SKU (or a metafield) holds the NFC tag ID
+    for (const item of order.line_items) {
+      // Adjust this logic to match how you identify a scholar garment.
+      // For example, if item.sku contains the NFC tag ID:
+      const nfcTagId = item.sku; // Or extract from item.metafields if stored there
+      
+      if (nfcTagId) {
+        // Update the garment record by setting the owner to the buyer's username
+        await garmentsCollection.updateOne(
+          { nfcTagId: nfcTagId },
+          { $set: { owner: buyerUsername } }
+        );
+      }
     }
     
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Garment purchase updated successfully" })
+      body: JSON.stringify({ message: "Garment updates processed" }),
     };
   } catch (error) {
-    console.error("Error updating garment:", error.message);
-    return { statusCode: 500, body: "Internal server error" };
+    console.error("Error processing webhook:", error.message);
+    return { statusCode: 500, body: "Internal Server Error" };
   }
 };
+ 
