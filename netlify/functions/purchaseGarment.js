@@ -7,64 +7,92 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
+  
+  // Shopify sends the raw JSON body
+  const requestBody = event.body; // raw JSON string
 
-  // Retrieve the Shopify HMAC header and raw request body
+  // Verify Shopify webhook HMAC signature
   const hmacHeader = event.headers["x-shopify-hmac-sha256"];
-  const requestBody = event.body; // This should be the raw JSON string
-
-  // Verify webhook signature
   const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
-  const hash = crypto
+  const generatedHmac = crypto
     .createHmac("sha256", secret)
     .update(requestBody, "utf8")
     .digest("base64");
 
-  if (hash !== hmacHeader) {
+  if (generatedHmac !== hmacHeader) {
     return { statusCode: 401, body: "Unauthorized" };
   }
-
-  // Parse the order from the request body
+  
+  // Parse the Shopify order payload
   let order;
   try {
     order = JSON.parse(requestBody);
   } catch (err) {
     return { statusCode: 400, body: "Invalid JSON" };
   }
-
-  // Extract buyer information; here we use the customer's email as their identifier
-  const buyerUsername = order.customer ? order.customer.email : null;
-  if (!buyerUsername) {
+  
+  // Extract the buyer's email from the order payload
+  const buyerEmail = order.customer ? order.customer.email : null;
+  if (!buyerEmail) {
     return { statusCode: 400, body: "Missing customer information" };
   }
-
-  // Connect to MongoDB and update garments that match purchased items
+  
+  // Connect to MongoDB
+  let updatedCount = 0;
   try {
     const db = await connectDB();
     const garmentsCollection = db.collection("scholargarments");
+    const usersCollection = db.collection("users"); // Assuming your user accounts are stored here
 
-    // Iterate through each line item in the order.
-    // Here, we assume that the product SKU (or a metafield) holds the NFC tag ID
+    // Map the buyer's email to a username by looking it up in your users collection
+    const userDoc = await usersCollection.findOne({ email: buyerEmail });
+    if (!userDoc || !userDoc.username) {
+      return { statusCode: 400, body: "No matching Fair Game user found for the provided email." };
+    }
+    const buyerUsername = userDoc.username;
+  
+    // Loop over each line item in the Shopify order to update garments
     for (const item of order.line_items) {
-      // Adjust this logic to match how you identify a scholar garment.
-      // For example, if item.sku contains the NFC tag ID:
-      const nfcTagId = item.sku; // Or extract from item.metafields if stored there
+      // Assume NFC tag ID is stored in the SKU; adjust if different
+      const nfcTagId = item.sku;
       
+      // Also extract additional details if needed
+      const garmentName = item.title;
+      const price = item.price;
+      const quantity = item.quantity;
+
       if (nfcTagId) {
-        // Update the garment record by setting the owner to the buyer's username
-        await garmentsCollection.updateOne(
+        // Upsert: if a garment with the given nfcTagId exists, update it; otherwise, insert a new one
+        const result = await garmentsCollection.updateOne(
           { nfcTagId: nfcTagId },
-          { $set: { owner: buyerUsername } }
+          { 
+            $set: { 
+              owner: buyerUsername,  // Link to the Fair Game username
+              garmentName: garmentName,
+              price: price,
+              quantity: quantity,
+              updatedAt: new Date()
+            },
+            $setOnInsert: {
+              createdAt: new Date()
+            }
+          },
+          { upsert: true }
         );
+        updatedCount++;
       }
+    }
+    
+    if (updatedCount === 0) {
+      return { statusCode: 404, body: "No matching garment(s) found or updated." };
     }
     
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Garment updates processed" }),
+      body: JSON.stringify({ message: "Garment purchase processed successfully", count: updatedCount })
     };
   } catch (error) {
-    console.error("Error processing webhook:", error.message);
-    return { statusCode: 500, body: "Internal Server Error" };
+    console.error("Error processing Shopify webhook:", error.message);
+    return { statusCode: 500, body: "Internal server error" };
   }
 };
- 

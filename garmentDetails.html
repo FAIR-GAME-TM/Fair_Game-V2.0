@@ -32,34 +32,44 @@
     } else {
       // Call the secure endpoint to get garment details
       fetch(`/.netlify/functions/getGarmentByNfc?nfcTagId=${encodeURIComponent(nfcTagId)}`)
-        .then(response => {
-          if (!response.ok) {
-            if (response.status === 401) {
-              // Not logged in: redirect to login page
-              window.location.href = "./login.html";
-            } else if (response.status === 403) {
-              // Garment not purchased or user does not own it
-              document.getElementById("garmentContainer").innerText = "Access restricted: " + response.statusText;
-            } else {
-              throw new Error("Error retrieving garment");
-            }
-          }
-          return response.json();
-        })
-        .then(garment => {
-          // Render garment details
-          const container = document.getElementById("garmentContainer");
-          container.innerHTML = `
-            <h2>${garment.garmentName}</h2>
-            <p>Fabric Type: ${garment.fabricType}</p>
-            <p>Fabric GSM: ${garment.fabricGSM}</p>
-            <!-- Add any additional garment details here -->
-          `;
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          document.getElementById("garmentContainer").innerText = "An error occurred while retrieving garment details.";
-        });
+  .then(response => {
+    if (!response.ok) {
+      // Check for specific status codes
+      if (response.status === 401) {
+        // Not logged in - redirect to login
+        window.location.href = "./login.html";
+      } else if (response.status === 403) {
+        // User does not own the garment
+        document.getElementById("garmentContainer").innerText =
+          "Access restricted: You do not own this garment.";
+      } else if (response.status === 404) {
+        // Garment not found
+        document.getElementById("garmentContainer").innerText =
+          "Garment not found.";
+      } else {
+        // Some other error
+        throw new Error("Error retrieving garment");
+      }
+    }
+    return response.json();
+  })
+  .then(garment => {
+    // Render the garment details
+    const container = document.getElementById("garmentContainer");
+    container.innerHTML = `
+      <h2>${garment.garmentName}</h2>
+      <p>Fabric Type: ${garment.fabricType}</p>
+      <p>Fabric GSM: ${garment.fabricGSM}</p>
+    `;
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    // Only show a generic error if we haven't handled it above
+    if (!document.getElementById("garmentContainer").innerText) {
+      document.getElementById("garmentContainer").innerText =
+        "An error occurred while retrieving garment details.";
+    }
+  });
     }
   </script>
 </body>
