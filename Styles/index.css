@@ -2,129 +2,139 @@
 
 /* Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html, body {
-    height: 100%;
-    font-family: "Doto", sans-serif;
-    background-color: #f6f6f6;
-    color: #1a1a1a;
+  height: 100%;
+  font-family: "Doto", sans-serif;
+  background-color: #f6f6f6;
+  color: #1a1a1a;
 }
 
-/* Two-Panel Layout */
+/* Container for two-panel layout */
 .container {
-    display: flex;
-    height: 100vh;
-    width: 100%;
+  display: flex;
+  height: 100vh;
+  width: 100%;
 }
 
-/* Left Panel */
+/* Left Panel with Background Image */
 .left-panel {
-    background-color: #111;
-    color: white;
-    width: 50%;
-    padding: 2px 4px; /* Closer to the edges */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  width: 50%;
+  /* This is background image */
+  background: url('/Images/images/Black_White_building.jpg') no-repeat center center;
+  background-size: cover;
+
+  /* Keep position relative if you want to overlay absolutely positioned items */
+  position: relative;
+
+  /* Text/links color to ensure good contrast on top of the image */
+  color: #fff;
+  padding: 2px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
+/* Navigation inside left panel */
 .left-panel .navbar {
-    display: flex;
-    justify-content: flex-start;
-    gap: 400px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #ffffff;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 338px;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .left-panel .navbar a {
-    text-decoration: none;
-    color: #ffffff;
-    transition: color 0.3s;
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
 }
-
 .left-panel .navbar a:hover {
-    color: #000;
+  color: #121212; /* or another contrasting color */
 }
 
 .left-panel h1 {
-    font-size: 4.5rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
 }
 
 .left-panel p {
-    font-size: 1.25rem;
-    color: #bbbbbb;
+  font-size: 1.25rem;
+  color: #ccc; /* Lighter shade for text, if desired */
 }
 
 /* Right Panel */
 .right-panel {
-    flex: 1;
-    background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 60px 80px;
-    position: relative;
+  flex: 1;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 10px;
+  position: relative;
+  align-items: flex-end;
 }
 
-/* Right Nav */
-.right-panel .navbar {
-    display: flex;
-    justify-content: flex-end;  /* Align to the right */
-    align-items: center;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #1a1a1a; /* Use dark text appropriate for the light background */
-    margin-bottom: 20px;
+/* Right Nav (absolute or relative depending on layout) */
+.right-nav {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 4px;
 }
 
-/* Profile Photo Container (common structure) */
+/* Profile Photo Container */
 .profile-photo {
-    position: relative;
-    width: 50px;  /* Adjust the size as needed */
-    height: 50px; /* Adjust the size as needed */
-    border-radius: 50%;
-    overflow: hidden;
+  position: relative;
+  width: 50px; /* adjust as needed */
+  height: 50px; /* adjust as needed */
+  border-radius: 0%;
+  overflow: hidden;
 }
 
-/* Profile Photo Placeholder Image */
 .profile-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 73%;
+  height: 73%;
 }
 
-/* Overlay Icon on the Left of the Photo */
-.profile-photo .profile-icon {
-    position: absolute;
-    left: -10px;  /* Negative to partially overlay to the left */
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #fff; /* Helps the icon stand out */
-    border-radius: 50%;
-    width: 20px;    /* Adjust as necessary */
-    height: 20px;   /* Adjust as necessary */
+
+/* Right navbar style matches left, just different color/gap if desired */
+.right-navbar {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd; /* Optional: a subtle border */
+    justify-content: flex-end;
+    gap: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a1a1a;
 }
 
-/* Introductory Text in Right Panel */
+.right-navbar a {
+    text-decoration: none;
+    color: #1a1a1a;
+    transition: color 0.3s; 
+    text-shadow: 0 0 3px #000000;
+}
+}
+.right-navbar a:hover {
+    color: #cc4339;
+}
+
+/* Intro text in right panel */
 .intro-text {
     max-width: 500px;
     margin-top: auto;
     font-size: 1.1rem;
+    font-style: oblique;
+    font-weight: bold;
     line-height: 1.6;
-    color: #444;
+    color: #000000;
 }
 
 /* Responsive Styles */
@@ -132,23 +142,69 @@ html, body {
     .container {
         flex-direction: column;
     }
-
+    
     .left-panel,
     .right-panel {
+        width: 100%;
         padding: 40px;
     }
-
+    
     .left-panel h1 {
         font-size: 3rem;
     }
-
+    
     .left-panel .navbar {
         justify-content: center;
-        gap: 20px;  /* Reduced gap for smaller screens */
+        gap: 20px;
         margin-bottom: 20px;
     }
-
-    .right-panel .navbar {
+    
+    .right-nav {
         justify-content: center;
     }
 }
+
+/* Position the sun container in the left panel */
+.sun-container {
+    /* If your left panel has position: relative, you can absolute-position the sun */
+    position: absolute;
+    top: 50%;               /* Adjust as needed */
+    left: 50%;              /* Adjust as needed */
+    transform: translate(-50%, -50%);
+    z-index: 10;            /* Ensures it appears above background elements */
+  }
+  
+  /* Basic styling for the sun image */
+  .red-sun {
+    width: 820px;           /* Adjust size as needed */
+    height: auto;
+    cursor: pointer;        /* Show pointer on hover since it's linkable */
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Basic styling for the sun image remains unchanged */
+.red-sun {
+    width: 820px;           /* Adjust size as needed */
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Trigger the smoother pulse animation on hover */
+  .red-sun:hover {
+    animation: sun-pulse 5s infinite ease-in-out;
+  }
+  
+  /* New, smoother pulsing keyframes */
+  @keyframes sun-pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
