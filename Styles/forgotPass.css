@@ -1,94 +1,164 @@
-/*************************************************************************** Navigation & header ***************************************************************************/
-header {
-    display: flex;
-    margin-top: 2%;
-    vertical-align: center;
-}
+/* 1) Pull in your index.css for Doto font, resets, etc. */
+@import url('index.css');
 
-.logoImg {
-    padding-left: 2%;
-    width: 2.5%;
-}
-
-.logo {
-    margin-left: 0.3%;
-    width: 10%;
-    height: 5%;
-}
-
-.nav {
-    width: 90%;
-    margin-top: 0.5%;
-    margin-left: 3%;
-}
-
-.navItem {
-    padding-top: 5%;
-    margin-left: 3%;
-    text-decoration: none;
-    font-size: 20px;
-    color: black;
-}
-
-.navItem:hover {
-    font-weight: bold;
-    color: red;
-}
-
-.contact {
-    margin-left: 50%;
-    padding: 1%;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    background-color: #ffffff;
-}
-
-.contact:hover {
-    color: rgb(255, 255, 255);
-    background-color: rgb(243, 0, 0);
-    border: 2px solid rgb(255, 255, 255);
-}
-
-/*************************************************************************** Forgot Password Container ***************************************************************************/
+/* 2) Global page styles */
 body {
-    font-family: Arial, sans-serif;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0 auto;
-    width: 95%;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f6f6;
+  color: #000;                   /* pure black text */
+  font-family: "Doto", sans‑serif;
+  font-weight: 700;              /* bold by default */
 }
 
+/* 3) Hide the big header logos */
+header img.logoImg,
+header img.logo {
+  display: none !important;
+}
+
+/* 4) Header & Nav — same as login/index */
+header {
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+.navItem,
+.contact {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.navItem:hover,
+.contact:hover,
+.navItem.active {
+  color: #d7402b;
+}
+
+/* 5) Form container — transparent, centered, larger */
 .login-container {
-    margin: 0 auto;
-    margin-top: 10%;
-    background-color: rgb(255, 255, 255);
-    padding: 60px;
-    border-radius: 8px;
-    box-shadow: 0 0 90px rgba(0, 0, 0, 0.267);
-    width: 20%;
-    text-align: center;
+  max-width: 480px;
+  margin: 8vh auto;
+  padding: 2rem;
+  background: none;
+  box-shadow: none;
+  text-align: center;
 }
 
+/* 6) Heading — big & extra bold */
 .login-container h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #000000;
+  font-family: inherit;
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  color: #000;
 }
 
+/* 7) Instruction text */
 .login-container p {
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: #333;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 400;            /* normal weight for readability */
+  color: #333;
 }
 
+/* 8) Email input */
 .login-container input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 1rem;
+  margin: 0.75rem 0;
+  border: 2px solid #000;
+  border-radius: 3px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000;
+}
+.login-container input::placeholder {
+  color: #333;
+  opacity: 1;
+  font-weight: 700;
 }
 
+/* 9) reCAPTCHA spacing (if present) */
+.g-recaptcha {
+  margin: 2rem 0;
+}
+
+/* 10) Submit button */
 .login-container input[type="submit"] {
+  width: 70%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #d7402b;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.login-container input[type="submit"]:hover {
+  background-color: #cc3a27;
+}
+
+/* 11) “Back to Login” link */
+.login-container p:last-of-type {
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+}
+.login-container p:last-of-type a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 700;
+}
+.login-container p:last-of-type a:hover {
+  color: #d7402b;
+}
+
+/* 12) Error message */
+#errorMessage {
+  color: red;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* 1) Give the container extra breathing room */
+.login-container {
+    padding: 3rem;    /* up from 2rem */
+  }
+  
+  /* 2) Instruction text: first <p> under the <h2> */
+  .login-container p:nth-of-type(1) {
+    font-size: 1.5rem;    /* bigger */
+    font-weight: 900;     /* extra bold */
+    color: #000;          /* pure black */
+  }
+  
+  /* 3) “Back to Login” link: the second <p> */
+  .login-container p:nth-of-type(2) {
+    margin-top: 3rem;     /* drop it lower */
+    font-size: 1.25rem;   /* larger */
+    font-weight: 700;     /* bold */
+  }
+  
+  /* 4) Make inputs & submit button more readable */
+  .login-container input[type="email"],
+  .login-container input[type="submit"] {
+    padding: 1.25rem;     /* extra padding */
+    font-size: 1.25rem;   /* larger text */
+  }
+  

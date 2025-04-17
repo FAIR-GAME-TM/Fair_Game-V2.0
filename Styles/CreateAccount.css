@@ -1,130 +1,163 @@
-/******************************************** Navigation & Header ********************************************/
-header{
-    display: flex;
-    margin-top: 2%;
-    vertical-align: center;
-}
-.logoImg{
-    padding-left: 2%;
-    width: 2.5%;
+/* -------------------------------------------------------------------
+   Import your index.css (Doto font, resets, etc.)
+------------------------------------------------------------------- */
+@import url('index.css');
+
+
+/* -------------------------------------------------------------------
+   Base page styles
+------------------------------------------------------------------- */
+
+/*— hide the big header logos —*/
+header img.logoImg,
+header img.logo {
+  display: none !important;
 }
 
-.logo{
-    margin-left: 0.3%;
-    width: 10%;
-    height: 5%;
-}
 
-.nav{
-    width: 90%;
-    margin-top: 0.5%;
-    margin-left: 3%;
-}
-
-.navItem{
-    padding-top: 5%;
-    margin-left: 3%;
-    text-decoration: none;
-    font-size: 20px;
-    color: black;
-}
-
-.navItem:hover{
-    font-weight: bold;
-    color: red;
-}
-
-.contact{
-    margin-left: 50%;
-    padding: 1%;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    background-color: #ffffff;
-}
-
-.contact:hover{
-    color: rgb(255, 255, 255);
-    background-color: rgb(243, 0, 0);
-    border: 2px solid rgb(255, 255, 255);
-}
-
-.Repository{
-    font-weight: bold;
-}
-
-/******************************************** Form Styling ********************************************/
 body {
-    font-family: Arial, sans-serif;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0 auto;
-    width: 95%;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f6f6;
+  color: #000;                      /* pure black text */
+  font-family: "Doto", sans-serif;
+  font-weight: 700;                 /* bold by default */
 }
 
+
+/* -------------------------------------------------------------------
+   Header & Nav — match your login/index nav exactly
+------------------------------------------------------------------- */
+header {
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.nav {                                /* your <div class="nav"> */
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+.navItem,
+.contact {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.navItem:hover,
+.contact:hover,
+.navItem.active {
+  color: #d7402b;
+}
+
+
+/* -------------------------------------------------------------------
+   Form container (transparent, centered, larger)
+------------------------------------------------------------------- */
 .login-container {
-    margin: 0 auto;
-    margin-top: 10%;    
-    background-color: rgb(255, 255, 255);
-    padding: 60px;
-    border-radius: 8px;
-    box-shadow: 0 0 90px rgba(0, 0, 0, 0.267);
-    width: 20%;
-    text-align: center;
+  max-width: 480px;
+  margin: 8vh auto;
+  padding: 2rem;
+  background: none;
+  box-shadow: none;
+  text-align: center;
 }
 
+
+/* -------------------------------------------------------------------
+   Heading (h2) styling like login h1
+------------------------------------------------------------------- */
 .login-container h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #000000;
+  font-family: inherit;
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 2rem;
+  color: #000;
 }
 
+
+/* -------------------------------------------------------------------
+   Form inputs (text, email, password)
+------------------------------------------------------------------- */
 .login-container input[type="text"],
 .login-container input[type="email"],
 .login-container input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 1rem;
+  margin: 0.75rem 0;
+  border: 2px solid #000;
+  border-radius: 3px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000;
 }
 
+/* darker, bold placeholders */
+.login-container input::placeholder {
+  color: #333;
+  opacity: 1;
+  font-weight: 700;
+}
+
+
+/* -------------------------------------------------------------------
+   Submit button styling
+------------------------------------------------------------------- */
 .login-container input[type="submit"] {
-    width: 70%;
-    padding: 10px;
-    margin-top: 2%;
-    border: none;
-    border-radius: 4px;
-    background-color: #a72828;
-    color: white;
-    font-size: 16px;
+  width: 70%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #d7402b;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
 }
-
 .login-container input[type="submit"]:hover {
-    background-color: #ff0000;
+  background-color: #cc3a27;
 }
+
+
+/* -------------------------------------------------------------------
+   reCAPTCHA spacing (if you still have it)
+------------------------------------------------------------------- */
 .g-recaptcha {
-    margin: 20px 0;
-    text-align: center;
+  margin: 2rem 0;
 }
+
+
+/* -------------------------------------------------------------------
+   Error message
+------------------------------------------------------------------- */
 #errorMessage {
-    color: red;
-    font-size: 14px;
+  color: red;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-/******************************************** Links and Bottom Section ********************************************/
-p {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #000000;
-}
 
-a {
-    text-decoration: none;
-    color: #a72828;
+/* -------------------------------------------------------------------
+   Bottom “Already have an account?” link
+------------------------------------------------------------------- */
+.login-container p:last-of-type {
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 700;
 }
-
-a:hover {
-    color: #ff0000;
+.login-container p:last-of-type a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 700;
+}
+.login-container p:last-of-type a:hover {
+  color: #d7402b;
 }

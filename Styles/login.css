@@ -1,134 +1,138 @@
-/*************************************************************************** Navigation & header ***************************************************************************/
-header{
+/* ===================================================================
+   1) Base + Doto font (from index.css)
+   =================================================================== */
+   body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6f6f6;
+    color: #000;
+    font-family: "Doto", sans-serif;
+    font-weight: 700;            /* make all default text bold */
+  }
+  
+  /* ===================================================================
+     2) Header + Nav: spread out + bold links
+     =================================================================== */
+  header {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .navbar {
     display: flex;
-    margin-top: 2% ;
-    vertical-align: center;
-}
-.logoImg{
-    padding-left: 2%;
-    width:2.5%;
-}
-
-.logo{
-    margin-left: 0.3%;
-    width:10% ;
-    height:5% ;
-}
-
-.nav{
-    width: 90%;
-    margin-top: 0.5%;
-    margin-left: 3%;
-}
-
-.navItem{
-    padding-top: 5%;
-    margin-left: 3%;
+    justify-content: space-evenly; /* evenly spaced */
+    padding: 1.5rem 0;
+  }
+  .navbar a {
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 900;            /* extra bold */
+    color: #000;
     text-decoration: none;
-    font-size: 20px;
-    color: black;
-}
-
-.navItem:hover{
-    font-weight: bold;
-    color: red;
-}
-
-
-.contact{
-    margin-left: 50%;
-    padding:1%;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    /* border: 2px solid rgb(0, 0, 0); */
-    background-color: #ffffff;
-}
-
-.contact:hover{
-    color: rgb(255, 255, 255);
-    background-color: rgb(243, 0, 0);
-    border: 2px solid rgb(255, 255, 255);
-}
-.additional-links {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5%;
-}
-
-.link-button {
-    padding: 8px 15px;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
-    border: 2px solid #000;
-    border-radius: 4px;
-    background-color: white;
+    transition: color 0.3s;
+  }
+  .navbar a:hover,
+  .navbar a.active {
+    color: #d7402b;
+  }
+  
+  /* ===================================================================
+     3) Login container: bigger & centered
+     =================================================================== */
+  .login-container {
+    max-width: 480px;
+    margin: 8vh auto;
+    padding: 2rem;
+    background: none;
+    box-shadow: none;
     text-align: center;
-    transition: all 0.3s ease;
-}
-
-.link-button:hover {
-    color: white;
-    background-color: red;
-    border-color: white;
-}
-
-
-
-.Repository{
-    font-weight: bold;
-}
-
-/******************************************** Repository Login ********************************************/
-body {
-    font-family: Arial, sans-serif;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0 auto;
-    width: 95%;
-}
-.login-container {
-    margin: 0 auto;
-    margin-top: 10%;    
-    background-color: rgb(255, 255, 255);
-    padding: 60px;
-    border-radius: 8px;
-    box-shadow: 0 0 90px rgba(0, 0, 0, 0.267);
-    width: 20%;
-    text-align: center;
-}
-.login-container h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #000000;
-}
-.login-container input[type="text"],
-.login-container input[type="password"] {
+  }
+  
+  /* ===================================================================
+     4) Heading: larger & extra bold
+     =================================================================== */
+  .login-container h1 {
+    font-family: inherit;
+    font-size: 3rem;
+    font-weight: 900;            /* extra bold */
+    margin-bottom: 2rem;
+    color: #000;
+  }
+  
+  /* ===================================================================
+     5) Icon: scale up
+     =================================================================== */
+  .login-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+  }
+  .login-icon img {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.login-container input[type="submit"] {
+    height: 100%;
+  }
+  
+  /* ===================================================================
+     6) Inputs: bold text + darker placeholder
+     =================================================================== */
+  .login-container input {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    border: 2px solid #000;
+    border-radius: 3px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 1.125rem;
+    font-weight: 700;            /* bold */
+    color: #000;
+  }
+  
+  .login-container input::placeholder {
+    color: #333;
+    opacity: 1;
+    font-weight: 700;            /* bold placeholder */
+  }
+  
+  /* ===================================================================
+     7) ENTER button: bold uppercase
+     =================================================================== */
+  .login-container button {
     width: 70%;
-    padding: 10px;
-    margin-top: 2%;
+    padding: 1rem;
+    margin-top: 1.5rem;
     border: none;
-    border-radius: 4px;
-    background-color: #a72828;
-    color: white;
-    font-size: 16px;
-}
-.login-container input[type="submit"]:hover {
-    background-color: #ff0000;
-}
-
-#errorMessage{
-    color: red;
-}
+    border-radius: 3px;
+    background-color: #d7402b;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.125rem;
+    font-weight: 900;            /* extra bold */
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .login-container button:hover {
+    background-color: #cc3a27;
+  }
+  
+  /* ===================================================================
+     8) Footer links: bold
+     =================================================================== */
+  .additional-links {
+    margin-top: 2rem;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .additional-links a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;            /* bold */
+  }
+  .additional-links a:hover {
+    color: #d7402b;
+  }
+  .additional-links .divider {
+    color: #000;
+  }
+  
