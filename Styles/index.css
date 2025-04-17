@@ -121,7 +121,7 @@ html, body {
     transition: color 0.3s; 
     text-shadow: 0 0 3px #000000;
 }
-}
+
 .right-navbar a:hover {
     color: #cc4339;
 }
