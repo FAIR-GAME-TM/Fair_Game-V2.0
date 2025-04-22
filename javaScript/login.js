@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then((data) => {
           if (data.message) {
             alert(data.message); // Success message from backend
-            window.location.href = './portfolio.html'; // Redirect on success
+            window.location.href = './profile.html'; // Redirect on success
           }
         })
         .catch((error) => {

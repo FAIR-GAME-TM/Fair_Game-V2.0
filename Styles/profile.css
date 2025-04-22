@@ -1,0 +1,90 @@
+/* 1) Import your shared Doto font & resets */
+@import url('index.css');
+
+/* 2) Base page styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f6f6f6;
+  color: #000;                    /* pure black text */
+  font-family: "Doto", sans-serif;
+  font-weight: 700;               /* bold by default */
+}
+
+/* 3) Header & Nav (exactly like your other pages) */
+header {
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+header nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+header nav a {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+header nav a:hover,
+header nav a.active {
+  color: #d7402b;
+}
+
+/* 4) Main container — same “card” layout */
+main {
+  max-width: 480px;
+  margin: 8vh auto;
+  padding: 2rem;
+  background: none;
+  box-shadow: none;
+  text-align: center;
+}
+
+/* 5) Headings */
+main h1 {
+  font-family: inherit;
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+}
+main h2 {
+  font-family: inherit;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+
+/* 6) Garment list – simple stacked cards */
+#garmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+#garmentsList > * {
+  border: 2px solid #000;
+  border-radius: 3px;
+  padding: 1rem;
+  text-align: left;
+  font-size: 1.125rem;
+  font-weight: 400;
+  background: #fff;
+}
+
+/* 7) “No garments” message */
+#noGarments {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* 8) Utility: override any small in‑line styles */
+main > p[style] {
+  display: none;
+}
