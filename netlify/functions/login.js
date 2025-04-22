@@ -1,48 +1,43 @@
+// netlify/functions/login.js
 const connectDB = require("./db");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt   = require("bcrypt");
+const jwt      = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   const { username, password } = JSON.parse(event.body);
-
   if (!username || !password) {
     return { statusCode: 400, body: "Username and password are required." };
   }
 
   try {
-    const db = await connectDB();
-    const collection = db.collection("users");
-
-    // Find the user in the database
-    const user = await collection.findOne({ username });
-
+    const db   = await connectDB();
+    const user = await db.collection("users").findOne({ username });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return { statusCode: 401, body: "Invalid username or password." };
     }
 
-    //Sign a JWT
+    // 1. Create a JWT valid for (say) 1h
     const token = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET || "default_secret_key",
-      { expiresIn: "2h" }
+      { username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
-    // Set the token as an HTTP-only cookie
+    // 2. Return it in an HttpOnly cookie
     return {
       statusCode: 200,
       headers: {
-        "Set-Cookie": `token=${token}; HttpOnly; Path=/; Max-Age=${2 * 3600}`,
-        "Content-Type": "application/json",
+        "Set-Cookie": `token=${token}; HttpOnly; Path=/; Secure; SameSite=Strict`,
       },
       body: JSON.stringify({ message: "Login successful!" }),
     };
   } catch (error) {
-    console.error("Error logging in:", error.message);
+    console.error("Error logging in:", error);
     return { statusCode: 500, body: "Internal server error." };
   }
 };

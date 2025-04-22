@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
       fetch('/.netlify/functions/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(formData),
       })
         .then((response) => {
