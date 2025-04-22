@@ -1,7 +1,7 @@
 // netlify/functions/login.js
 const connectDB = require("./db");
-const bcrypt   = require("bcrypt");
-const jwt      = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.handler = async (event) => {

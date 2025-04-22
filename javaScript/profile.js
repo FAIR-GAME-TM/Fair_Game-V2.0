@@ -1,42 +1,41 @@
+// javaScript/profile.js
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Decode the username from the cookie (or fetch via an endpoint if you have one)
-    const token = document.cookie
-      .split(";")
-      .map(c => c.trim())
-      .find(c => c.startsWith("token="))
-      ?.split("=")[1];
-  
-    if (!token) {
-      window.location.href = "./login.html";
-      return;
+    // 1) Ask the server who I am
+    let user;
+    try {
+      const res = await fetch("/.netlify/functions/getUserInfo", {
+        credentials: "include"     // ← send the HttpOnly cookie
+      });
+      if (!res.ok) throw new Error("not authenticated");
+      user = await res.json();    // { username: "alice" }
+    } catch (err) {
+      // no valid session → back to login
+      return window.location.replace("./login.html");
     }
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    document.getElementById("usernameDisplay").textContent = payload.username;
+  
+    // 2) Inject username into the UI
+    document.getElementById("usernameDisplay").textContent = user.username;
     document.getElementById("loginLink").textContent = "Log Out";
   
-    // 2. Fetch the user’s garments
+    // 3) Fetch my garments (also send the cookie)
+    let garments = [];
     try {
-      const res = await fetch("/.netlify/functions/getMyGarments");
-      if (!res.ok) throw new Error(await res.text());
-      const garments = await res.json();
-  
-      const list = document.getElementById("garmentsList");
-      if (garments.length === 0) {
-        document.getElementById("noGarments").style.display = "block";
-        return;
-      }
-  
-      garments.forEach(g => {
-        const a = document.createElement("a");
-        a.href = `./garmentDetails.html?nfcTagId=${encodeURIComponent(g.nfcTagId)}`;
-        a.textContent = g.garmentName || g.nfcTagId;
-        a.className = "garment-link";
-        list.appendChild(a);
+      const r2 = await fetch("/.netlify/functions/getMyGarments", {
+        credentials: "include"
       });
-    } catch (err) {
-      console.error("Failed to load garments:", err);
-      document.getElementById("garmentsList").textContent =
-        "Could not load your garments.";
+      if (r2.ok) garments = await r2.json();
+    } catch (_){}
+    
+    const list = document.getElementById("garmentsList");
+    if (!garments.length) {
+      document.getElementById("noGarments").style.display = "block";
+      return;
     }
+    garments.forEach(g => {
+      const a = document.createElement("a");
+      a.href = `./garmentDetails.html?nfcTagId=${encodeURIComponent(g.nfcTagId)}`;
+      a.textContent = g.garmentName || g.nfcTagId;
+      list.appendChild(a);
+    });
   });
   
