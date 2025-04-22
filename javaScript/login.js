@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .then(data => {
         // User is already logged in, redirect to profile page
-        window.location.href = './portfolio.html';
+        window.location.href = './profile.html';
       })
       .catch(error => {
         // User is not logged in; continue with login form functionality

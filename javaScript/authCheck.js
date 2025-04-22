@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update button text to show the username
         loginButton.textContent = data.username;
         // Update the link so that clicking it takes you to the logged-in profile page
-        loginButton.href = "./portfolio.html"; // Change to profile.html if you create one
+        loginButton.href = "./profile.html";
       })
       .catch(err => {
         console.log("User not logged in:", err);
