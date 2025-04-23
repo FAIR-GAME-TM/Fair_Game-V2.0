@@ -1,34 +1,39 @@
 // javaScript/authCheck.js
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Support both header variants
-  const btn = document.getElementById('loginButton') || document.getElementById('loginLink');
+  // Grab whichever nav element you’re using:
+  //   on normal pages it might be <a id="loginButton">,
+  //   on profile.html it’s <a id="loginLink">
+  const btn = document.getElementById('loginButton')
+             || document.getElementById('loginLink');
   if (!btn) return;
 
-  // Ask the server who I am (sends HttpOnly cookie)
+  // 1) Check session on the server
   fetch('/.netlify/functions/getUserInfo', {
-    credentials: 'include'
+    credentials: 'include'  // send HttpOnly cookie
   })
     .then(res => {
       if (!res.ok) throw new Error('Not authenticated');
-      return res.json();
+      return res.json();     // { username: "dylan", ... }
     })
     .then(user => {
-      // Logged in: show username and set up logout
+      // 2) Logged in: show the username
       btn.textContent = user.username;
-      btn.href = '#';
+      // 3) Wire up logout on click
+      btn.href = '#';         // remove the default link
       btn.addEventListener('click', async e => {
         e.preventDefault();
-        // Call logout function to clear the cookie
+        // Hit our logout function to clear the cookie
         await fetch('/.netlify/functions/logout', {
           method: 'POST',
           credentials: 'include'
         });
-        // Redirect back to login page
+        // Then send them back to login
         window.location.href = './login.html';
       });
     })
     .catch(() => {
-      // Not logged in: show Log In link
+      // 4) Not logged in: ensure it’s a normal Log In link
       btn.textContent = 'Log In';
       btn.href = './login.html';
     });

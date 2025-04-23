@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Auto-redirect if already logged in
-    fetch('/.netlify/functions/getUserInfo')
+    fetch('/.netlify/functions/getUserInfo', {
+      credentials: 'include'
+    })
       .then(response => {
         if (response.ok) return response.json();
         throw new Error("Not authenticated");
