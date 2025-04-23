@@ -9,13 +9,13 @@
 </head>
 <body>
   <header>
-    <img class="logoImg" src="./Images/logo/Artboard_1.png" alt=""/>
+    <img class="logoImg" src="./Images/logo/Artboard_1.png" alt="Fair Game Icon"/>
     <img class="logo"    src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo"/>
     <nav class="nav">
-      <a class="navItem"         href="./index.html">Home</a>
-      <a class="navItem Shop"    href="./shop.html">Shop</a>
-      <a class="navItem"         href="./Blog.html">Blog</a>
-      <a id="loginButton"        href="./login.html">Log In</a>
+      <a class="navItem" href="./index.html">Home</a>
+      <a class="navItem Shop" href="./shop.html">Shop</a>
+      <a class="navItem" href="./Blog.html">Blog</a>
+      <a id="loginButton" href="./login.html">Log In</a>
       <a class="navItem contact" href="./contact.html">Contact Us</a>
     </nav>
   </header>
@@ -25,8 +25,6 @@
       <h1 class="shopTitle">Fair Shop</h1>
       <a class="cart" href="#"><img src="./Social-Icons/grocery-store.png" alt="Cart" /></a>
     </div>
-
-    <!-- Product grid will be injected here -->
     <div id="product-list" class="product-grid"></div>
   </main>
 
@@ -34,40 +32,40 @@
     <p>&copy; 2024 Fair Shop. All rights reserved.</p>
   </footer>
 
-  <!-- Auth check for Login/Logout toggle -->
-  <script src="./javaScript/authCheck.js"></script>
+  <!-- 1) Auth toggle (Log In / Log Out) -->
+  <script src="./javaScript/authCheck.js" defer></script>
 
-    <!-- via jsDelivr -->
-    <script src="https://cdn.jsdelivr.net/npm/shopify-buy@2.16.0/dist/shopify-buy.umd.polyfilled.min.js"></script>
+  <!-- 2) Shopify Buy SDK (from unpkg, polyfilled UMD build) -->
+  <script src="https://unpkg.com/shopify-buy@2.16.0/dist/shopify-buy.umd.polyfilled.min.js" defer></script>
 
-  <script>
-    (async () => {
-      // 1) Initialize the Shopify client
+  <!-- 3) Your inline shop logic -->
+  <script defer>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // initialize the SDK
       const client = ShopifyBuy.buildClient({
-        domain: 'rjm8c1-8r.myshopify.com',            // your-shop-name.myshopify.com
-        storefrontAccessToken: 'ecda633eb93407dde1804cb0f72ff531' // replace with your Storefront API token
+        domain: 'rjm8c1-8r.myshopify.com',            // your-shop.myshopify.com
+        storefrontAccessToken: 'ecda633eb93407dde1804cb0f72ff531'
       });
 
-      // 2) Fetch all products
+      // fetch all products
       const products = await client.product.fetchAll();
 
-      // 3) Render product cards
+      // render them
       const list = document.getElementById('product-list');
       products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-item';
-
-        // Build inner HTML
         card.innerHTML = `
-          ${product.images[0] ? `<img class="product-Img" src="${product.images[0].src}" alt="${product.title}" />` : ''}
+          ${product.images[0]
+            ? `<img class="product-Img" src="${product.images[0].src}" alt="${product.title}" />`
+            : ''}
           <h3 class="product-Name">${product.title}</h3>
           <p class="product-Price">${product.variants[0].price} ${product.variants[0].presentmentCurrencyCode}</p>
           <button class="buy-btn">Buy Now</button>
         `;
-
         list.appendChild(card);
 
-        // 4) On click: create checkout, add item, redirect
+        // buy button handler
         card.querySelector('.buy-btn').addEventListener('click', async () => {
           let checkout = await client.checkout.create();
           checkout = await client.checkout.addLineItems(checkout.id, [{
@@ -77,7 +75,7 @@
           window.location.href = checkout.webUrl;
         });
       });
-    })();
+    });
   </script>
 </body>
 </html>
