@@ -1,21 +1,35 @@
+// javaScript/authCheck.js
 document.addEventListener('DOMContentLoaded', () => {
-  const loginButton = document.getElementById('loginButton');
-  if (!loginButton) return;
+  // Support both header variants
+  const btn = document.getElementById('loginButton') || document.getElementById('loginLink');
+  if (!btn) return;
 
+  // Ask the server who I am (sends HttpOnly cookie)
   fetch('/.netlify/functions/getUserInfo', {
-    credentials: 'include'  // ensure HttpOnly cookie is sent
+    credentials: 'include'
   })
     .then(res => {
       if (!res.ok) throw new Error('Not authenticated');
       return res.json();
     })
-    .then(data => {
-      // Update button text to show the username
-      loginButton.textContent = data.username;
-      // Update the link so that clicking it takes you to the logged-in profile page
-      loginButton.href = './profile.html';
+    .then(user => {
+      // Logged in: show username and set up logout
+      btn.textContent = user.username;
+      btn.href = '#';
+      btn.addEventListener('click', async e => {
+        e.preventDefault();
+        // Call logout function to clear the cookie
+        await fetch('/.netlify/functions/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        // Redirect back to login page
+        window.location.href = './login.html';
+      });
     })
-    .catch(err => {
-      console.log('User not logged in:', err);
+    .catch(() => {
+      // Not logged in: show Log In link
+      btn.textContent = 'Log In';
+      btn.href = './login.html';
     });
 });
