@@ -1,36 +1,41 @@
 // javaScript/authCheck.js
 
-// This script checks if the user is authenticated and updates the nav link accordingly.
 document.addEventListener('DOMContentLoaded', () => {
-  // Select the login/logout nav element (id varies by page)
-  const navBtn = document.getElementById('loginButton') || document.getElementById('loginLink');
+  // pick up either <a id="loginButton"> or <a id="loginLink">
+  const navBtn = document.getElementById('loginButton')
+              || document.getElementById('loginLink');
   if (!navBtn) return;
 
-  // Ask the server who I am, sending the HttpOnly token cookie
   fetch('/.netlify/functions/getUserInfo', {
     credentials: 'include'
   })
     .then(res => {
       if (!res.ok) throw new Error('Not authenticated');
-      return res.json();  // { username: 'dylan' }
+      return res.json();    // => { username: 'dylan' }
     })
     .then(user => {
-      // Logged in: change nav link to 'Log Out'
-      navBtn.textContent = 'Log Out';
-      navBtn.href = '#';
-      navBtn.addEventListener('click', async e => {
-        e.preventDefault();
-        // Call logout to clear the cookie
-        await fetch('/.netlify/functions/logout', {
-          method: 'POST',
-          credentials: 'include'
+      const onProfilePage = window.location.pathname.endsWith('profile.html');
+
+      if (onProfilePage) {
+        // On profile.html → show "Log Out" and wire in logout
+        navBtn.textContent = 'Log Out';
+        navBtn.href = '#';
+        navBtn.addEventListener('click', async e => {
+          e.preventDefault();
+          await fetch('/.netlify/functions/logout', {
+            method: 'POST',
+            credentials: 'include'
+          });
+          window.location.href = './login.html';
         });
-        // Redirect to login page
-        window.location.href = './login.html';
-      });
+      } else {
+        // On all other pages → show username and link to profile
+        navBtn.textContent = user.username;
+        navBtn.href = './profile.html';
+      }
     })
     .catch(() => {
-      // Not logged in: show 'Log In'
+      // Not logged in → show Log In everywhere
       navBtn.textContent = 'Log In';
       navBtn.href = './login.html';
     });

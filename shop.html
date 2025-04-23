@@ -1,113 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- StyleSheet -->
-    <link rel="stylesheet" href="./Styles/shop.css">
-
-    <!-- Tab Name &Logo -->
-    <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon" />
-    <title>Fair-Game&#8482; | Shop</title>
-
-    <header>
-        <img class="logoImg" src="./Images/logo/Artboard_1.png" alt=""/>
-        <img class="logo" src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo"/>
-        <div class="nav">
-            <a class="navItem" href="./index.html">Home</a>
-            <a class="navItem Shop" href="./shop.html">Shop</a>
-            <a class="navItem" href="./Blog.html">Blog</a>
-            <a id="loginButton" class="navItem" href="./login.html">Log In</a>
-            <a class="contact" href="./contact.html">Contact Us</a>
-        </div>
-    </header>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fair-Game™ | Shop</title>
+  <link rel="stylesheet" href="./Styles/shop.css" />
+  <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon" />
 </head>
 <body>
+  <header>
+    <img class="logoImg" src="./Images/logo/Artboard_1.png" alt=""/>
+    <img class="logo"    src="./Images/logo/Fair-GameLogo.png" alt="Fair Game Logo"/>
+    <nav class="nav">
+      <a class="navItem"         href="./index.html">Home</a>
+      <a class="navItem Shop"    href="./shop.html">Shop</a>
+      <a class="navItem"         href="./Blog.html">Blog</a>
+      <a id="loginButton"        href="./login.html">Log In</a>
+      <a class="navItem contact" href="./contact.html">Contact Us</a>
+    </nav>
+  </header>
+
+  <main>
     <div class="shopName">
-        <h1 class="shopTitle">Fair Shop</h1>
-        <a class="cart" href=""><img class="cart" src="./Social-Icons/grocery-store.png" alt=""></a> 
+      <h1 class="shopTitle">Fair Shop</h1>
+      <a class="cart" href="#"><img src="./Social-Icons/grocery-store.png" alt="Cart" /></a>
     </div>
 
-    <div class="container">
-        <div class="product-grid">
+    <!-- Product grid will be injected here -->
+    <div id="product-list" class="product-grid"></div>
+  </main>
 
-            <a class="product-Hover" href="">
-                <div class="product-item">
-                    <div class="product-Top">
-                        <img class="product-Img" src="./Images/Shop/Fair_Game_Vintage_Tee_Front.jpg" alt="">
-                    </div>
-                    <div class="product-Bottom">
-                        <h3 class="product-Name">Product 1</h3>
-                        <h4 class="product-Price">$39.99</h4>
-                    </div>
-                </div>
-            </a>
+  <footer>
+    <p>&copy; 2024 Fair Shop. All rights reserved.</p>
+  </footer>
 
-            <a class="product-Hover" href="">
-                <div class="product-item">
-                    <div class="product-Top">
-                        <img class="product-Img" src="./Images/Shop/Fair_Game_Vintage_Tee_Back.jpg" alt="">
-                    </div>
-                    <div class="product-Bottom">
-                        <h3 class="product-Name">Product 2</h3>
-                        <h4 class="product-Price">$29.99</h4>
-                    </div>
-                </div>
-            </a>
+  <!-- Auth check for Login/Logout toggle -->
+  <script src="./javaScript/authCheck.js"></script>
 
-            <!-- <a class="product-Hover" href="">
-                <div class="product-item">
-                    <div class="product-Top">
-                        <img class="product-Img" src="./Images/Shop/Fair_Game_Vintage_Tee_Front.jpg" alt="">
-                    </div>
-                    <div class="product-Bottom">
-                        <h3 class="product-Name">Product 3</h3>
-                        <h4 class="product-Price">$19.99</h4>
-                    </div>
-                </div>
-            </a>
+  <!-- Shopify Buy SDK -->
+  <script src="https://sdks.shopifycdn.com/js-buy-sdk/latest/shopify-buy.polyfilled.global.js"></script>
 
-            <a class="product-Hover" href="">
-                <div class="product-item">
-                    <div class="product-Top">
-                        <img class="product-Img" src="./Images/Shop/Fair_Game_Vintage_Tee_Back.jpg" alt="">
-                    </div>
-                    <div class="product-Bottom">
-                        <h3 class="product-Name">Product 4</h3>
-                        <h4 class="product-Price">$39.99</h4>
-                    </div>
-                </div>
-            </a>
+  <script>
+    (async () => {
+      // 1) Initialize the Shopify client
+      const client = ShopifyBuy.buildClient({
+        domain: 'rjm8c1-8r.myshopify.com',            // your-shop-name.myshopify.com
+        storefrontAccessToken: 'ecda633eb93407dde1804cb0f72ff531' // replace with your Storefront API token
+      });
 
-            <a class="product-Hover" href="">
-                <div class="product-item">
-                    <div class="product-Top">
-                        <img class="product-Img" src="./Images/Shop/Fair_Game_Vintage_Tee_Back.jpg" alt="">
-                    </div>
-                    <div class="product-Bottom">
-                        <h3 class="product-Name">Product 5</h3>
-                        <h4 class="product-Price">$39.99</h4>
-                    </div>
-                </div>
-            </a> -->
-            
- 
+      // 2) Fetch all products
+      const products = await client.product.fetchAll();
 
-        </div>
+      // 3) Render product cards
+      const list = document.getElementById('product-list');
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-item';
 
-    </div>
+        // Build inner HTML
+        card.innerHTML = `
+          ${product.images[0] ? `<img class="product-Img" src="${product.images[0].src}" alt="${product.title}" />` : ''}
+          <h3 class="product-Name">${product.title}</h3>
+          <p class="product-Price">${product.variants[0].price} ${product.variants[0].presentmentCurrencyCode}</p>
+          <button class="buy-btn">Buy Now</button>
+        `;
 
+        list.appendChild(card);
 
-
-
-
-
-
-    <div class="footer">
-        <p>&copy; 2024 Fair Shop. All rights reserved.</p>
-    </div>
-    <script src="./javaScript/authCheck.js"></script>
+        // 4) On click: create checkout, add item, redirect
+        card.querySelector('.buy-btn').addEventListener('click', async () => {
+          let checkout = await client.checkout.create();
+          checkout = await client.checkout.addLineItems(checkout.id, [{
+            variantId: product.variants[0].id,
+            quantity: 1
+          }]);
+          window.location.href = checkout.webUrl;
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
