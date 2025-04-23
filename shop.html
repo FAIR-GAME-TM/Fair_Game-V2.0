@@ -38,44 +38,45 @@
   <!-- 2) Shopify Buy SDK (from unpkg, polyfilled UMD build) -->
   <script src="https://sdks.shopifycdn.com/js-buy-sdk/v3/latest/index.umd.min.js"></script>
 
-  <!-- 3) Your inline shop logic -->
   <script defer>
     document.addEventListener('DOMContentLoaded', async () => {
-      // initialize the SDK
       const client = ShopifyBuy.buildClient({
-        domain: 'rjm8c1-8r.myshopify.com',            // your-shop.myshopify.com
+        domain: 'rjm8c1-8r.myshopify.com',
         storefrontAccessToken: 'ecda633eb93407dde1804cb0f72ff531'
       });
-
-      // fetch all products
+    
       const products = await client.product.fetchAll();
-
-      // render them
-      const list = document.getElementById('product-list');
+      const list     = document.getElementById('product-list');
+    
       products.forEach(product => {
+        const variant = product.variants[0];
+        const money   = variant.priceV2;        // { amount: "19.99", currencyCode: "USD" }
+    
         const card = document.createElement('div');
         card.className = 'product-item';
         card.innerHTML = `
           ${product.images[0]
             ? `<img class="product-Img" src="${product.images[0].src}" alt="${product.title}" />`
-            : ''}
+            : ''
+          }
           <h3 class="product-Name">${product.title}</h3>
-          <p class="product-Price">${product.variants[0].price} ${product.variants[0].presentmentCurrencyCode}</p>
+          <p class="product-Price">${money.amount} ${money.currencyCode}</p>
           <button class="buy-btn">Buy Now</button>
         `;
+    
         list.appendChild(card);
-
-        // buy button handler
+    
         card.querySelector('.buy-btn').addEventListener('click', async () => {
           let checkout = await client.checkout.create();
           checkout = await client.checkout.addLineItems(checkout.id, [{
-            variantId: product.variants[0].id,
-            quantity: 1
+            variantId: variant.id,
+            quantity:  1
           }]);
           window.location.href = checkout.webUrl;
         });
       });
     });
-  </script>
+    </script>
+    
 </body>
 </html>
