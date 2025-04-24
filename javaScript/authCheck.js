@@ -1,7 +1,7 @@
 // javaScript/authCheck.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // pick up either <a id="loginButton"> or <a id="loginLink">
+  // Look for the nav link on any page:
   const navBtn = document.getElementById('loginButton')
               || document.getElementById('loginLink');
   if (!navBtn) return;
@@ -14,10 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return res.json();    // => { username: 'dylan' }
     })
     .then(user => {
+      // Are we on the profile page?
       const onProfilePage = window.location.pathname.endsWith('profile.html');
 
       if (onProfilePage) {
-        // On profile.html → show "Log Out" and wire in logout
+        // On profile.html → show "Log Out"
         navBtn.textContent = 'Log Out';
         navBtn.href = '#';
         navBtn.addEventListener('click', async e => {
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             credentials: 'include'
           });
+          // After logout, go to login screen
           window.location.href = './login.html';
         });
       } else {
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     .catch(() => {
-      // Not logged in → show Log In everywhere
+      // Not logged in → always show Log In
       navBtn.textContent = 'Log In';
       navBtn.href = './login.html';
     });

@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fair-Game™ | Sustainable Fashion</title>
-    <link rel="stylesheet" href="/Styles/index.css" />
-    <!-- Link to your CSS -->
+    <link rel="stylesheet" href="./Styles/index.css" />
   </head>
   <body>
     <div class="container">
@@ -16,25 +15,22 @@
           <a href="shop.html">Store</a>
           <a href="contact.html">Contact</a>
         </div>
-        <!-- The sun container is now animated to move across the screen -->
         <div class="sun-container">
-            <img src="Images/logo/Sun .png" alt="Red Sun" class="red-sun" />
-          </a>
+          <img src="Images/logo/Sun .png" alt="Red Sun" class="red-sun" />
         </div>
       </div>
 
       <!-- Right Panel -->
       <div class="right-panel">
-        <!-- Right nav -->
         <div class="right-nav">
           <div class="profile-photo">
             <a href="https://linktr.ee/Fair_Game">
-              <img src="/Images/logo/ICOn.png" alt="Profile Photo" />
+              <img src="./Images/logo/ICOn.png" alt="Profile Photo" />
             </a>
-            <div class="profile-icon"></div>
           </div>
           <div class="navbar right-navbar">
-            <a href="login.html">Log In</a>
+            <!-- Give this link an ID so authCheck.js can target it -->
+            <a id="loginButton" href="login.html">Log In</a>
           </div>
         </div>
 
@@ -52,6 +48,8 @@
         <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
       </div>
     </div>
-    <script src="./javaScript/authCheck.js"></script>
+
+    <!-- Auth toggle (Log In / Username / Log Out) -->
+    <script src="./javaScript/authCheck.js" defer></script>
   </body>
 </html>
