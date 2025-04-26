@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3) Fetch my garments (also send the cookie)
     let garments = [];
     try {
-      const r2 = await fetch("/.netlify/functions/getGarments", {
+      const r2 = await fetch("/.netlify/functions/getMyGarments", {
         credentials: "include"
       });
       if (r2.ok) garments = await r2.json();
