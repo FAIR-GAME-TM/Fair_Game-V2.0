@@ -7,8 +7,14 @@
   <link rel="stylesheet" href="./Styles/profile.css" />
 </head>
 <body>
-  <!-- placeholder for the shared nav -->
-  <div id="site-header"></div>  
+  <header>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./shop.html">Shop</a>
+      <a href="./profile.html" class="active">My Profile</a>
+      <a href="./login.html" id="loginLink">Log In</a>
+    </nav>
+  </header>
 
   <main>
     <h1>Welcome, <span id="usernameDisplay"></span></h1>
@@ -21,18 +27,5 @@
 
   <script src="./javaScript/profile.js"></script>
   <script src="./javaScript/authCheck.js"></script>
-  <script>
-    // load and insert the shared header
-    fetch('/header.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('site-header').innerHTML = html;
-      })
-      .then(() => {
-        // once the header is in, wire up the login/user toggle
-        return import('./javaScript/authCheck.js');
-      })
-      .catch(console.error);
-  </script>
 </body>
 </html>
