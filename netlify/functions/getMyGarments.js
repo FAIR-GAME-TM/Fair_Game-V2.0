@@ -1,6 +1,6 @@
 // netlify/functions/getMyGarments.js
 
-const connectDB = require("../db");          // adjust path if needed
+const connectDB = require("./db");          // adjust path if needed
 const jwt       = require("jsonwebtoken");
 require("dotenv").config();
 
