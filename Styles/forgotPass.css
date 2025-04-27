@@ -20,7 +20,8 @@ header img.logo {
 /* 4) Header & Nav — same as login/index */
 header {
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
 }
 .nav {
   display: flex;

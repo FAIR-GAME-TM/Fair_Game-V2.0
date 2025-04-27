@@ -13,10 +13,14 @@
   /* ===================================================================
      2) Header + Nav: spread out + bold links
      =================================================================== */
-  header {
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  }
+    .navbar, header {
+        background: #fff;
+      }
+      header {
+        box-shadow: none;
+        border-bottom: 1px solid #eee;
+      }
+    
   .navbar {
     display: flex;
     justify-content: space-evenly; /* evenly spaced */

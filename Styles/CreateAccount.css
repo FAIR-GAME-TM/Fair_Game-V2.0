@@ -29,9 +29,10 @@ body {
    Header & Nav — match your login/index nav exactly
 ------------------------------------------------------------------- */
 header {
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
+    background: #fff;
+    box-shadow: none;
+    border-bottom: 1px solid #eee;
+  }
 .nav {                                /* your <div class="nav"> */
   display: flex;
   justify-content: space-evenly;

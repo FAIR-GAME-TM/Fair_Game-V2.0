@@ -24,8 +24,12 @@ nav.nav {
   align-items: center;
   padding: 1.5rem 0;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+
+  /* remove the grey shadow */
+  box-shadow: none;
+
 }
+
 nav.nav a {
   font-family: inherit;
   font-size: 1.25rem;
@@ -42,8 +46,8 @@ nav.nav a.Shop {     /* highlight “Shop” link */
 /* 5) Centered main “card” container */
 main {
   max-width: 480px;
-  margin: 3rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem; /* push content down without exposing grey */
   background: none;
   box-shadow: none;
   text-align: center;
