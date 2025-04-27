@@ -2,75 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Garment Details</title>
   <link rel="stylesheet" href="./Styles/garmentDetails.css" />
 </head>
 <body>
   <header>
-    <!-- Navigation goes here -->
+    <!-- pull in your shared navbar here -->
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="profile.html">My Profile</a>
+      <a id="loginLink" href="login.html">Log In</a>
+    </nav>
+    <script src="./javaScript/authCheck.js" defer></script>
   </header>
 
   <main>
-    <div id="garmentContainer">
-      <!-- Garment details will be displayed here -->
+    <div id="garmentContainer" class="detail-container">
+      Loading garment…
     </div>
   </main>
 
+  <!-- Sirv viewer -->
+  <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
+
   <script>
-    // Utility function to get query parameter values
-    function getQueryParam(param) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(param);
-    }
-
-    // Get the NFC tag ID from the URL
-    const nfcTagId = getQueryParam("nfcTagId");
-
-    if (!nfcTagId) {
-      document.getElementById("garmentContainer").innerText = "No garment information provided.";
-    } else {
-      // Call the secure endpoint to get garment details
-      fetch(`/.netlify/functions/getGarmentByNfc?nfcTagId=${encodeURIComponent(nfcTagId)}`)
-  .then(response => {
-    if (!response.ok) {
-      // Check for specific status codes
-      if (response.status === 401) {
-        // Not logged in - redirect to login
-        window.location.href = "./login.html";
-      } else if (response.status === 403) {
-        // User does not own the garment
-        document.getElementById("garmentContainer").innerText =
-          "Access restricted: You do not own this garment.";
-      } else if (response.status === 404) {
-        // Garment not found
-        document.getElementById("garmentContainer").innerText =
-          "Garment not found.";
-      } else {
-        // Some other error
-        throw new Error("Error retrieving garment");
+    (async()=>{
+      // get NFC tag from query
+      const params = new URLSearchParams(location.search);
+      const tag = params.get("nfcTagId");
+      if (!tag) {
+        return document.getElementById("garmentContainer").innerText = "No ID provided.";
       }
-    }
-    return response.json();
-  })
-  .then(garment => {
-    // Render the garment details
-    const container = document.getElementById("garmentContainer");
-    container.innerHTML = `
-      <h2>${garment.garmentName}</h2>
-      <p>Fabric Type: ${garment.fabricType}</p>
-      <p>Fabric GSM: ${garment.fabricGSM}</p>
-    `;
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    // Only show a generic error if we haven't handled it above
-    if (!document.getElementById("garmentContainer").innerText) {
-      document.getElementById("garmentContainer").innerText =
-        "An error occurred while retrieving garment details.";
-    }
-  });
-    }
+
+      // fetch detail from secure endpoint
+      const res = await fetch(`/.netlify/functions/getGarmentByNfc?nfcTagId=${encodeURIComponent(tag)}`, {
+        credentials: "include"
+      });
+      if (!res.ok) {
+        // handle 401 / 403 / 404 as before…
+        let msg = res.status === 401
+          ? "Please log in."
+          : res.status === 403
+            ? "You don’t own this."
+            : "Not found.";
+        return document.getElementById("garmentContainer").innerText = msg;
+      }
+      const g = await res.json();
+
+      // build the HTML
+      const html = `
+        <h1>${g.garmentName}</h1>
+
+        <!-- Sirv spin -->
+        <div class="Sirv"
+             data-src="${g.spinUrl /* assume you saved this via metafield */}">
+        </div>
+
+        <section class="details">
+          <h2>Fabric</h2>
+          <ul>
+            <li><strong>Type:</strong> ${g.fabricType || "—"}</li>
+            <li><strong>GSM:</strong> ${g.fabricGSM || "—"}</li>
+            <li><strong>Color:</strong> ${g.fabricColorName || g.fabricColorHex || "—"}</li>
+            <li><strong>Source:</strong> ${g.fabricSource || "—"}</li>
+          </ul>
+
+          <h2>Thread</h2>
+          <ul>
+            <li><strong>Type:</strong> ${g.threadType || "—"}</li>
+            <li><strong>Weight:</strong> ${g.threadWeight || "—"}</li>
+            <li><strong>Material:</strong> ${g.threadMaterial || "—"}</li>
+            <li><strong>Color:</strong> ${g.threadColorName || g.threadColorHex || "—"}</li>
+            <li><strong>Source:</strong> ${g.threadSource || "—"}</li>
+          </ul>
+
+          <h2>Purchase Info</h2>
+          <ul>
+            <li><strong>Purchased by:</strong> ${g.owner}</li>
+            <li><strong>Quantity:</strong> ${g.quantity}</li>
+            <li><strong>Price:</strong> $${g.price}</li>
+            <li><strong>First Opened:</strong> ${new Date(g.createdAt).toLocaleDateString()}</li>
+            <li><strong>Last Updated:</strong> ${new Date(g.updatedAt).toLocaleString()}</li>
+          </ul>
+        </section>
+      `;
+      document.getElementById("garmentContainer").innerHTML = html;
+
+    })();
   </script>
 </body>
 </html>

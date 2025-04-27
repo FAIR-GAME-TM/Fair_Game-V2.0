@@ -1,127 +1,119 @@
+// netlify/functions/purchaseGarment.js
 const connectDB = require("./db");
-const crypto = require("crypto");
+const crypto   = require("crypto");
 require("dotenv").config();
+const fetch    = require("node-fetch");
 
-exports.handler = async (event, context) => {
-  console.log("PurchaseGarment function invoked.");
-
-  // Ensure the method is POST
+exports.handler = async (event) => {
+  // 1) Only POST
   if (event.httpMethod !== "POST") {
-    console.log("Invalid HTTP method:", event.httpMethod);
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  // Shopify sends the raw JSON body
-  const requestBody = event.body; // raw JSON string
-  console.log("Raw request body:", requestBody);
-
-  // Log headers (or at least the HMAC header) for debugging
-  console.log("Received headers:", event.headers);
+  const rawBody    = event.body;
   const hmacHeader = event.headers["x-shopify-hmac-sha256"];
-  if (!hmacHeader) {
-    console.log("No Shopify HMAC header found.");
-    return { statusCode: 401, body: "Unauthorized: No HMAC header" };
-  }
-  console.log("Shopify HMAC header:", hmacHeader);
-
-  const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
-  const generatedHmac = crypto
-    .createHmac("sha256", secret)
-    .update(requestBody, "utf8")
-    .digest("base64");
-  console.log("Generated HMAC:", generatedHmac);
-
-  if (generatedHmac !== hmacHeader) {
-    console.log("HMAC mismatch: Unauthorized request.");
+  const secret     = process.env.SHOPIFY_WEBHOOK_SECRET;
+  const ourHmac    = crypto.createHmac("sha256", secret)
+                           .update(rawBody, "utf8")
+                           .digest("base64");
+  if (ourHmac !== hmacHeader) {
     return { statusCode: 401, body: "Unauthorized" };
   }
-  console.log("HMAC verification passed.");
 
-  // Parse the Shopify order payload
   let order;
   try {
-    order = JSON.parse(requestBody);
-    console.log("Order payload parsed successfully.");
-  } catch (err) {
-    console.log("Error parsing JSON:", err);
+    order = JSON.parse(rawBody);
+  } catch {
     return { statusCode: 400, body: "Invalid JSON" };
   }
 
-  // Extract the buyer's email from the order payload
-  const buyerEmail = order.customer ? order.customer.email : null;
+  const buyerEmail = order.customer?.email;
   if (!buyerEmail) {
-    console.log("Customer email missing in order payload.");
-    return { statusCode: 400, body: "Missing customer information" };
+    return { statusCode: 400, body: "Missing customer email" };
   }
-  console.log("Buyer email extracted:", buyerEmail);
 
-  // Connect to MongoDB and look up the buyer's username
-  let updatedCount = 0;
-  try {
-    const db = await connectDB();
-    console.log("Connected to MongoDB.");
-    const garmentsCollection = db.collection("scholargarments");
-    const usersCollection = db.collection("users"); // Assuming your user accounts are stored here
+  // 2) Lookup your user by email → get username
+  const db  = await connectDB();
+  const usr = await db.collection("users").findOne({ email: buyerEmail });
+  if (!usr) {
+    return { statusCode: 400, body: "No matching user" };
+  }
+  const buyer = usr.username;
 
-    // Map buyer email to a Fair Game username
-    const userDoc = await usersCollection.findOne({ email: buyerEmail });
-    if (!userDoc || !userDoc.username) {
-      console.log("No matching user found for email:", buyerEmail);
-      return { statusCode: 400, body: "No matching Fair Game user found for the provided email." };
-    }
-    const buyerUsername = userDoc.username;
-    console.log("Buyer username mapped:", buyerUsername);
-  
-    // Loop over each line item in the Shopify order to update or insert garments
-    for (const item of order.line_items) {
-      // Assume NFC tag ID is stored in the SKU; adjust if stored elsewhere
-      const nfcTagId = item.sku;
-      if (!nfcTagId) {
-        console.log("Line item missing SKU for NFC tag ID, skipping item:", item);
-        continue;
-      }
-      
-      // Also extract additional details if needed
-      const garmentName = item.title;
-      const price = item.price;
-      const quantity = item.quantity;
-      
-      console.log(`Processing item: NFC Tag ID ${nfcTagId}, Product Title: ${garmentName}`);
-      
-      // Upsert: if a garment with the given nfcTagId exists, update it; otherwise insert a new one.
-      const result = await garmentsCollection.updateOne(
-        { nfcTagId: nfcTagId },
-        { 
-          $set: { 
-            owner: buyerUsername,  // Link to the Fair Game username
-            garmentName: garmentName,
-            price: price,
-            quantity: quantity,
-            updatedAt: new Date()
-          },
-          $setOnInsert: {
-            createdAt: new Date()
-          }
+  // 3) Upsert each line item, then fetch its metafields
+  let updated = 0;
+  for (let item of order.line_items) {
+    const tagId = item.sku;        // assume SKU == NFC tag ID
+    if (!tagId) continue;
+
+    // Upsert core info
+    await db.collection("scholargarments").updateOne(
+      { nfcTagId: tagId },
+      {
+        $set: {
+          owner: buyer,
+          garmentName: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          updatedAt: new Date()
         },
-        { upsert: true }
+        $setOnInsert: { createdAt: new Date() }
+      },
+      { upsert: true }
+    );
+    updated++;
+
+    // 4) Fetch **Shopify metafields** for this product
+    //     so we can store e.g. fabricType, fabricGSM, etc.
+    const graphql = `
+      query getMetafields($id: ID!) {
+        product(id: $id) {
+          metafields(namespace:"custom", first:10) {
+            edges { node {
+              key
+              value
+              type
+            } }
+          }
+        }
+      }
+    `;
+    // We need the product GraphQL ID. Shopify order payload
+    // includes `admin_graphql_api_id` like "gid://shopify/Product/12345"
+    const productGid = order.admin_graphql_api_id;
+    // Call the storefront API
+    const resp = await fetch(
+      `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`,
+      {
+        method: "POST",
+        headers: {
+          "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: graphql, variables: { id: productGid } })
+      }
+    );
+    const { data } = await resp.json();
+    const metaList = data?.product?.metafields?.edges || [];
+
+    // Merge them into Mongo
+    const setFields = {};
+    for (let { node } of metaList) {
+      setFields[node.key] = node.value;
+    }
+    if (Object.keys(setFields).length) {
+      await db.collection("scholargarments").updateOne(
+        { nfcTagId: tagId },
+        { $set: setFields }
       );
-      
-      console.log(`Upsert result for NFC Tag ID ${nfcTagId}:`, result);
-      updatedCount++;
     }
-    
-    if (updatedCount === 0) {
-      console.log("No garments matched the order data.");
-      return { statusCode: 404, body: "No matching garment(s) found or updated." };
-    }
-    
-    console.log(`Process completed: ${updatedCount} garment(s) updated/inserted.`);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Garment purchase processed successfully", count: updatedCount })
-    };
-  } catch (error) {
-    console.error("Error processing Shopify webhook:", error.message);
-    return { statusCode: 500, body: "Internal server error" };
   }
+
+  if (updated === 0) {
+    return { statusCode: 404, body: "No items updated" };
+  }
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Processed", count: updated })
+  };
 };
