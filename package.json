@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@shopify/shopify-api": "^11.12.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
