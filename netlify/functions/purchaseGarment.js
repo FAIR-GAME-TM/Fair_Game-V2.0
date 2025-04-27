@@ -43,16 +43,16 @@ exports.handler = async (event) => {
     const tagId = item.sku;  // SKU == NFC tag ID
     if (!tagId) continue;
 
-    // 1) Upsert the core order info
+    // Upsert core info
     await db.collection("scholargarments").updateOne(
       { nfcTagId: tagId },
       {
         $set: {
-          owner:       buyer,
+          owner: buyer,
           garmentName: item.title,
-          price:       item.price,
-          quantity:    item.quantity,
-          updatedAt:   new Date()
+          price:      item.price,
+          quantity:   item.quantity,
+          updatedAt:  new Date()
         },
         $setOnInsert: { createdAt: new Date() }
       },
@@ -60,49 +60,38 @@ exports.handler = async (event) => {
     );
     updated++;
 
-    // 2) Build the GID for the product
+    // Grab the product’s GID from the line‐item
     const productGid = item.admin_graphql_api_id
-      || `gid://shopify/Product/${item.product_id}`;
+      || `gid://shopify/Product/${ item.product_id }`;
 
-    // 3) Fetch your `custom` metafields via the **Admin** GraphQL API
-    const adminEndpoint =
-      `https://${process.env.SHOPIFY_STORE_DOMAIN}` +
-      `/admin/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
-
-    const metafieldQuery = `
+    // Fetch the custom metafields via Storefront GraphQL
+    const graphql = `
       query getMetafields($id: ID!) {
         product(id: $id) {
           metafields(namespace: "custom", first: 20) {
-            edges { node { key value } }
+            edges { node {
+              key
+              value
+            } }
           }
         }
       }
     `;
-
-    const resp = await fetch(adminEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type":       "application/json",
-        "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_API_ACCESS_TOKEN
-      },
-      body: JSON.stringify({
-        query:     metafieldQuery,
-        variables: { id: productGid }
-      })
-    });
-
-    if (!resp.ok) {
-      console.error("Shopify Admin API error", await resp.text());
-      continue;
-    }
-
-    const { data, errors } = await resp.json();
-    if (errors) {
-      console.error("GraphQL errors:", errors);
-    }
-
-    // 4) Merge them into Mongo
+    const resp = await fetch(
+      `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`,
+      {
+        method: "POST",
+        headers: {
+          "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: graphql, variables: { id: productGid } })
+      }
+    );
+    const { data } = await resp.json();
     const edges = data?.product?.metafields?.edges || [];
+
+    // Merge them into Mongo
     const setFields = {};
     for (const { node } of edges) {
       setFields[node.key] = node.value;
@@ -118,7 +107,6 @@ exports.handler = async (event) => {
   if (updated === 0) {
     return { statusCode: 404, body: "No items updated" };
   }
-
   return {
     statusCode: 200,
     body: JSON.stringify({ message: "Processed", count: updated })
