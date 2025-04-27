@@ -5,17 +5,16 @@ require("dotenv").config();
 const fetch    = require("node-fetch");
 
 exports.handler = async (event) => {
-  // 1) Only POST
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   const rawBody    = event.body;
   const hmacHeader = event.headers["x-shopify-hmac-sha256"];
-  const secret     = process.env.SHOPIFY_WEBHOOK_SECRET;
-  const ourHmac    = crypto.createHmac("sha256", secret)
-                           .update(rawBody, "utf8")
-                           .digest("base64");
+  const ourHmac    = crypto
+    .createHmac("sha256", process.env.SHOPIFY_WEBHOOK_SECRET)
+    .update(rawBody, "utf8")
+    .digest("base64");
   if (ourHmac !== hmacHeader) {
     return { statusCode: 401, body: "Unauthorized" };
   }
@@ -32,7 +31,6 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: "Missing customer email" };
   }
 
-  // 2) Lookup your user by email → get username
   const db  = await connectDB();
   const usr = await db.collection("users").findOne({ email: buyerEmail });
   if (!usr) {
@@ -40,10 +38,9 @@ exports.handler = async (event) => {
   }
   const buyer = usr.username;
 
-  // 3) Upsert each line item, then fetch its metafields
   let updated = 0;
-  for (let item of order.line_items) {
-    const tagId = item.sku;        // assume SKU == NFC tag ID
+  for (const item of order.line_items) {
+    const tagId = item.sku;  // SKU == NFC tag ID
     if (!tagId) continue;
 
     // Upsert core info
@@ -53,9 +50,9 @@ exports.handler = async (event) => {
         $set: {
           owner: buyer,
           garmentName: item.title,
-          price: item.price,
-          quantity: item.quantity,
-          updatedAt: new Date()
+          price:      item.price,
+          quantity:   item.quantity,
+          updatedAt:  new Date()
         },
         $setOnInsert: { createdAt: new Date() }
       },
@@ -63,25 +60,23 @@ exports.handler = async (event) => {
     );
     updated++;
 
-    // 4) Fetch **Shopify metafields** for this product
-    //     so we can store e.g. fabricType, fabricGSM, etc.
+    // Grab the product’s GID from the line‐item
+    const productGid = item.admin_graphql_api_id
+      || `gid://shopify/Product/${ item.product_id }`;
+
+    // Fetch the custom metafields via Storefront GraphQL
     const graphql = `
       query getMetafields($id: ID!) {
         product(id: $id) {
-          metafields(namespace:"custom", first:10) {
+          metafields(namespace: "custom", first: 20) {
             edges { node {
               key
               value
-              type
             } }
           }
         }
       }
     `;
-    // We need the product GraphQL ID. Shopify order payload
-    // includes `admin_graphql_api_id` like "gid://shopify/Product/12345"
-    const productGid = order.admin_graphql_api_id;
-    // Call the storefront API
     const resp = await fetch(
       `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`,
       {
@@ -94,11 +89,11 @@ exports.handler = async (event) => {
       }
     );
     const { data } = await resp.json();
-    const metaList = data?.product?.metafields?.edges || [];
+    const edges = data?.product?.metafields?.edges || [];
 
     // Merge them into Mongo
     const setFields = {};
-    for (let { node } of metaList) {
+    for (const { node } of edges) {
       setFields[node.key] = node.value;
     }
     if (Object.keys(setFields).length) {
