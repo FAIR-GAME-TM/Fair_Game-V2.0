@@ -1,16 +1,14 @@
 // netlify/functions/getMyGarments.js
-
-const connectDB = require("./db");          // adjust path if needed
+const connectDB = require("./db");
 const jwt       = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.handler = async (event) => {
-  // 1) Only allow GET
   if (event.httpMethod !== "GET") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  // 2) Grab token from HttpOnly cookie
+  // 1) Authenticate via HttpOnly cookie
   const cookieHeader = event.headers.cookie;
   if (!cookieHeader) {
     return { statusCode: 401, body: "Not authenticated" };
@@ -26,24 +24,33 @@ exports.handler = async (event) => {
   let payload;
   try {
     payload = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
+  } catch {
     return { statusCode: 401, body: "Invalid token" };
   }
 
-  // 3) Query MongoDB for garments owned by this user
-  try {
-    const db = await connectDB();
-    const garments = await db
-      .collection("scholargarments")
-      .find({ owner: payload.username })
-      .toArray();
+  // 2) Fetch all purchases for this user
+  const db = await connectDB();
+  const tagIds = await db
+    .collection("garmentPurchases")
+    .distinct("nfcTagId", { buyer: payload.username });
 
+  // If none, early-return empty list
+  if (tagIds.length === 0) {
     return {
       statusCode: 200,
-      body: JSON.stringify(garments),
+      body: JSON.stringify([])
     };
-  } catch (err) {
-    console.error("Error fetching user garments:", err);
-    return { statusCode: 500, body: "Internal server error" };
   }
+
+  // 3) Lookup the garment docs for those tag IDs
+  const garments = await db
+    .collection("scholargarments")
+    .find({ nfcTagId: { $in: tagIds } })
+    .toArray();
+
+  // 4) Return them — your front-end profile.js can remain unchanged
+  return {
+    statusCode: 200,
+    body: JSON.stringify(garments)
+  };
 };
