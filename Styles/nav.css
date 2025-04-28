@@ -1,30 +1,40 @@
 /* Styles/nav.css */
 
-/* 1) Remove the solid header background */
+/* 1) Transparent header (no black bar) */
 header {
     background: none;
   }
   
-  /* 2) Keep your flex layout but make the bar transparent */
+  /* 2) Flex container for all links */
   .navbar {
     display: flex;
-    justify-content: flex-start;
-    gap: 338px;
+    align-items: center;
+    padding: 1rem 2rem;
     font-size: 2rem;
     font-weight: bold;
-    padding: 1rem 2rem;
-    background: transparent;
-    margin: 0;
+    
   }
   
-  /* 3) Default link color = black */
+  /* 3) All links default to black and spaced apart */
   .navbar a {
     text-decoration: none;
     color: #000;
     transition: color 0.3s;
+    font-size: inherit;
+    font-weight: inherit;
   }
   
-  /* 4) On hover, text turns white */
+  /* 4) Put 338px between the first three links */
+  .navbar a:not(#loginButton) {
+    margin-right: 338px;
+  }
+  
+  /* 5) Push the Log In link to the far right */
+  #loginButton {
+    margin-left: auto;
+  }
+  
+  /* 6) On hover, any link turns white */
   .navbar a:hover {
     color: #fff;
   }
