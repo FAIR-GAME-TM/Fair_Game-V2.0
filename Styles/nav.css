@@ -24,15 +24,16 @@ header {
     font-weight: inherit;
   }
   
-  /* 4) Put 338px between the first three links */
-  .navbar a:not(#loginButton) {
+/* Put 338px after each link except the very last */
+    .navbar a:not(:last-child) {
     margin-right: 338px;
   }
   
-  /* 5) Push the Log In link to the far right */
+  /* Push the final link (Log In / Log Out) to the far right */
   .navbar a:last-child {
     margin-left: auto;
   }
+  
   
   /* 6) On hover, any link turns white */
   .navbar a:hover {
