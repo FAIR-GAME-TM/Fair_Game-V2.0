@@ -1,145 +1,128 @@
-/*************************************************************************** Navigation & header ***************************************************************************/
-header{
-    display: flex;
-    margin-top: 2% ;
-    vertical-align: center;
-}
-.logoImg{
-    padding-left: 2%;
-    width:3.5%;
-}
+/* 1) Global resets + Doto font */
+@import url('index.css');
 
-.logo{
-    margin-left: 0.3%;
-    width:15% ;
-    height:10% ;
-}
-
-.nav{
-    width: 90%;
-    margin-top: 0.5%;
-    margin-left: 8%;
-}
-
-.navItem{
-    padding-top: 5%;
-    margin-left: 8%;
-    text-decoration: none;
-    font-size: 20px;
-    color: black;
-}
-
-.navItem:hover{
-    font-weight: bold;
-    color: red;
-}
-
-
-.contact{
-    margin-left: 20%;    
-    padding:1%;
-    font-size: 20px;
-    text-decoration: none;
-    color: rgb(255, 0, 0);
-    border: 2px solid rgb(255, 0, 0);
-    background-color: #ffffff;
-}
-
-.contact:hover{
-    color: rgb(255, 255, 255);
-    background-color: rgb(243, 0, 0);
-    border: 2px solid rgb(255, 255, 255);
-}
-
-
-/*********************************************** Contact Styles ***********************************************/
+/* 2) Page base */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    width: 95%;
-    margin: 0;
-    padding: 0;
-    background: url('../Images/Background/contactBackground-1.jpg');
-    background-size: cover;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f6f6;
+  font-family: "Doto", sans-serif;
+  color: #000;
+  font-weight: 700;
 }
 
-.contact-container {
-    max-width: 50%;
-    margin: 5% 18% 0% 26%;
-    padding: 1%;
-    background: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 1%;
+/* 3) Hide any old logo images */
+header img.logoImg,
+header img.logo {
+  display: none !important;
 }
 
-.contact-header {
-    text-align: center;
-    margin-bottom: 3%;
+/* 4) Header & Nav (identical to other pages) */
+header {
+  background: #fff;
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+}
+header .navbar {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+header .navbar a {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+header .navbar a:hover,
+header .navbar a.active {
+  color: #d7402b;
 }
 
-.contact-header h1 {
-    margin: 0;
-    color: #333;
+/* 5) Main container — same “card” layout as login/create/profile */
+main.contact-container {
+  max-width: 480px;
+  margin: 8vh auto;
+  padding: 2rem;
+  background: none;
+  box-shadow: none;
+  text-align: center;
 }
 
-.contact-form {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+/* 6) Page title */
+main.contact-container h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 2rem;
 }
 
+/* 7) Form fields (match login inputs) */
 .contact-form .form-group {
-    width: 48%;
-    margin-bottom: 2%;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
-
-.contact-form .form-group.full-width {
-    width: 100%;
-}
-
 .contact-form label {
-    display: block;
-    margin-bottom: 1%;
-    color: #333;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #000;
 }
-
-.contact-form input, .contact-form textarea {
-    width: 100%;
-    padding: 2%;
-    border: 1px solid #ccc;
-    border-radius: 2%;
-    box-sizing: border-box;
-}
-
+.contact-form input,
 .contact-form textarea {
-    resize: vertical;
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #000;
+  border-radius: 3px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000;
+  box-sizing: border-box;
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #333;
+  opacity: 1;
+  font-weight: 700;
 }
 
+/* 8) Submit button (match other CTAs) */
 .contact-form button {
-    margin-left: 40%;
-    background-color: #c21e1e;
-    color: white;
-    padding: 1.5% 2%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #d7402b;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-
 .contact-form button:hover {
-    background-color: #ff0000;
+  background-color: #cc3a27;
 }
 
+/* 9) Contact info block */
 .contact-info {
-    margin-top: 3.5%;
+  margin-top: 3rem;
+  text-align: left;
 }
-
 .contact-info h2 {
-    color: #333;
-    margin-bottom: 1%;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #000;
 }
-
 .contact-info p {
-    color: #555;
-    margin: 1% 0;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #333;
 }

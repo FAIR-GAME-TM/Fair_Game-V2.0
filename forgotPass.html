@@ -23,14 +23,43 @@
     <div class="login-container">
         <h2>Forgot Password?</h2>
         <p>Enter your email address and we'll send you instructions to reset your password.</p>
-        <form id="forgot-password-form" action="/send-reset-link" method="post">
-            <input id="email" type="email" name="email" placeholder="Enter your email" required>
+        <form id="forgot-password-form">
+            <input id="email" type="email" placeholder="Enter your email" required>
             <input type="submit" value="Send Reset Link">
         </form>
         <p><a href="login.html">Back to Login</a></p>
         <p id="errorMessage" class="error-message"></p>
     </div>
 
-    <script src="./javaScript/authCheck.js"></script> 
+       <script src="./javaScript/authCheck.js" defer></script>
+       <script>
+         document.getElementById("forgot-password-form")
+           .addEventListener("submit", async (e) => {
+             e.preventDefault();
+             const email = document.getElementById("email").value.trim();
+             const msgEl = document.getElementById("errorMessage");
+             msgEl.textContent = "";
+    
+             try {
+               const res = await fetch("/.netlify/functions/sendResetLink", {
+                 method: "POST",
+                 headers: { "Content-Type": "application/json" },
+                 body: JSON.stringify({ email })
+              });
+    
+               if (res.ok) {
+                 msgEl.style.color = "green";
+                 msgEl.textContent = "Check your inbox for the reset link.";
+               } else {
+                 const text = await res.text();
+                 msgEl.style.color = "red";
+                 msgEl.textContent = text;
+               }
+             } catch (err) {
+               msgEl.style.color = "red";
+               msgEl.textContent = "Network error, please try again.";
+             }
+           });
+    </script>
 </body>
 </html>
