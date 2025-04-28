@@ -30,7 +30,7 @@ header {
   }
   
   /* 5) Push the Log In link to the far right */
-  #loginButton {
+  .navbar a:last-child {
     margin-left: auto;
   }
   
