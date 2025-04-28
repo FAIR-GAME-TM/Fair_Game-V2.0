@@ -4,18 +4,23 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fair-Game™ | Contact</title>
+
+  <!-- 1) Load ONLY the navbar CSS first -->
+  <link rel="stylesheet" href="./Styles/nav.css"/>
+
+  <!-- 2) Then your page-specific styles -->
   <link rel="stylesheet" href="./Styles/contact.css"/>
   <link rel="shortcut icon" href="./Images/logo/Artboard_1.png" type="image/x-icon"/>
 </head>
 <body>
   <header>
-    <div class="navbar">
+    <!-- this exactly matches index.html’s nav markup -->
+    <nav class="navbar">
       <a href="index.html">Home</a>
       <a href="shop.html">Store</a>
-      <a href="Blog.html">Blog</a>
       <a id="loginButton" href="login.html">Log In</a>
       <a href="contact.html" class="active">Contact Us</a>
-    </div>
+    </nav>
   </header>
 
   <main class="contact-container">

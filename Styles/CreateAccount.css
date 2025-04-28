@@ -25,35 +25,6 @@ body {
 }
 
 
-/* -------------------------------------------------------------------
-   Header & Nav — match your login/index nav exactly
-------------------------------------------------------------------- */
-header {
-    background: #fff;
-    box-shadow: none;
-    border-bottom: 1px solid #eee;
-  }
-.nav {                                /* your <div class="nav"> */
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 1.5rem 0;
-}
-.navItem,
-.contact {
-  font-family: inherit;
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #000;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-.navItem:hover,
-.contact:hover,
-.navItem.active {
-  color: #d7402b;
-}
-
 
 /* -------------------------------------------------------------------
    Form container (transparent, centered, larger)

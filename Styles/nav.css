@@ -1,0 +1,31 @@
+/* Styles/nav.css */
+
+/* 1) Remove the solid header background */
+header {
+    background: none;
+  }
+  
+  /* 2) Keep your flex layout but make the bar transparent */
+  .navbar {
+    display: flex;
+    justify-content: flex-start;
+    gap: 338px;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    background: transparent;
+    margin: 0;
+  }
+  
+  /* 3) Default link color = black */
+  .navbar a {
+    text-decoration: none;
+    color: #000;
+    transition: color 0.3s;
+  }
+  
+  /* 4) On hover, text turns white */
+  .navbar a:hover {
+    color: #fff;
+  }
+  

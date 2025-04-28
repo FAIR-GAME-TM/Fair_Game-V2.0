@@ -10,34 +10,7 @@
     font-weight: 700;            /* make all default text bold */
   }
   
-  /* ===================================================================
-     2) Header + Nav: spread out + bold links
-     =================================================================== */
-    .navbar, header {
-        background: #fff;
-      }
-      header {
-        box-shadow: none;
-        border-bottom: 1px solid #eee;
-      }
-    
-  .navbar {
-    display: flex;
-    justify-content: space-evenly; /* evenly spaced */
-    padding: 1.5rem 0;
-  }
-  .navbar a {
-    font-family: inherit;
-    font-size: 1.25rem;
-    font-weight: 900;            /* extra bold */
-    color: #000;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .navbar a:hover,
-  .navbar a.active {
-    color: #d7402b;
-  }
+  
   
   /* ===================================================================
      3) Login container: bigger & centered

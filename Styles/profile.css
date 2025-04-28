@@ -11,30 +11,7 @@ body {
   font-weight: 700;               /* bold by default */
 }
 
-/* 3) Header & Nav (exactly like your other pages) */
-header {
-    background: #fff;
-    box-shadow: none;
-    border-bottom: 1px solid #eee;
-  }
-header nav {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 1.5rem 0;
-}
-header nav a {
-  font-family: inherit;
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #000;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-header nav a:hover,
-header nav a.active {
-  color: #d7402b;
-}
+
 
 /* 4) Main container — same “card” layout */
 main {

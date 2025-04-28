@@ -17,18 +17,7 @@ header img.logo {
   display: none !important;
 }
 
-/* 4) Header & Nav — same as login/index */
-header {
-  background: #fff;
-  box-shadow: none;
-  border-bottom: 1px solid #eee;
-}
-.nav {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 1.5rem 0;
-}
+
 .navItem,
 .contact {
   font-family: inherit;

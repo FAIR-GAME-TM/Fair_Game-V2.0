@@ -1,48 +1,26 @@
-/* 1) Global resets + Doto font */
-@import url('index.css');
+/* Styles/contact.css */
 
-/* 2) Page base */
-body {
+/* 1) Reset & Base (from index.css) */
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap');
+
+* {
   margin: 0;
   padding: 0;
-  background-color: #f6f6f6;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
   font-family: "Doto", sans-serif;
-  color: #000;
-  font-weight: 700;
+  background-color: #f6f6f6;
+  color: #000; /* page-wide text color */
 }
 
-/* 3) Hide any old logo images */
-header img.logoImg,
-header img.logo {
-  display: none !important;
-}
 
-/* 4) Header & Nav (identical to other pages) */
-header {
-  background: #fff;
-  box-shadow: none;
-  border-bottom: 1px solid #eee;
-}
-header .navbar {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 1.5rem 0;
-}
-header .navbar a {
-  font-family: inherit;
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #000;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-header .navbar a:hover,
-header .navbar a.active {
-  color: #d7402b;
-}
 
-/* 5) Main container — same “card” layout as login/create/profile */
+
+
+/* 3) Contact-page content */
 main.contact-container {
   max-width: 480px;
   margin: 8vh auto;
@@ -52,14 +30,13 @@ main.contact-container {
   text-align: center;
 }
 
-/* 6) Page title */
 main.contact-container h1 {
   font-size: 3rem;
   font-weight: 900;
   margin-bottom: 2rem;
 }
 
-/* 7) Form fields (match login inputs) */
+/* Form fields */
 .contact-form .form-group {
   width: 100%;
   margin-bottom: 1.5rem;
@@ -91,7 +68,7 @@ main.contact-container h1 {
   font-weight: 700;
 }
 
-/* 8) Submit button (match other CTAs) */
+/* Submit button */
 .contact-form button {
   padding: 1rem 1.5rem;
   border: none;
@@ -109,7 +86,7 @@ main.contact-container h1 {
   background-color: #cc3a27;
 }
 
-/* 9) Contact info block */
+/* Contact info block */
 .contact-info {
   margin-top: 3rem;
   text-align: left;
