@@ -9,7 +9,6 @@
 </head>
 <body>
   <header>
-    <!-- this exactly matches index.html’s nav markup -->
     <nav class="navbar">
       <a href="index.html">Home</a>
       <a href="shop.html">Shop</a>
@@ -29,37 +28,55 @@
   <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
 
   <script>
-    (async()=>{
-      // get NFC tag from query
+    (async()=> {
+      // Get NFC tag from query string
       const params = new URLSearchParams(location.search);
       const tag = params.get("nfcTagId");
       if (!tag) {
-        return document.getElementById("garmentContainer").innerText = "No ID provided.";
+        document.getElementById("garmentContainer").innerText = "No ID provided.";
+        return;
       }
 
-      // fetch detail from secure endpoint
+      // Fetch garment details
       const res = await fetch(`/.netlify/functions/getGarmentByNfc?nfcTagId=${encodeURIComponent(tag)}`, {
         credentials: "include"
       });
       if (!res.ok) {
-        // handle 401 / 403 / 404 as before…
-        let msg = res.status === 401
+        const msg = res.status === 401
           ? "Please log in."
           : res.status === 403
             ? "You don’t own this."
             : "Not found.";
-        return document.getElementById("garmentContainer").innerText = msg;
+        document.getElementById("garmentContainer").innerText = msg;
+        return;
       }
       const g = await res.json();
 
-      // build the HTML
+      // ▷ TEMPORARY FALLBACK for tech-pack assets
+      const techImages = g.techPackImages || [
+        `/Images/techPack/t-shirt.webp`,
+        `/Images/techPack/t-shirt2.webp`
+      ];
+      const techDownload = g.techPackDownloadUrl || `/TechPacks/${tag}.ai`;
+
+      // Build HTML
       const html = `
+        <!-- Tech Pack Slideshow -->
+        <div class="slideshow-container">
+          ${techImages.map((img,i)=>
+            `<img class="slide" src="${img}" alt="Tech Pack ${i+1}">`
+          ).join("")}
+          <a class="prev" onclick="plusSlides(-1)">❮</a>
+          <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+
+        <!-- Download Tech Pack Button -->
+        <a href="${techDownload}" download class="download-button">Download Tech Pack</a>
+
         <h1>${g.garmentName}</h1>
 
-        <!-- Sirv spin -->
-        <div class="Sirv"
-             data-src="${g.spinUrl /* assume you saved this via metafield */}">
-        </div>
+        <!-- Sirv spin viewer -->
+        <div class="Sirv" data-src="${g.spinUrl}"></div>
 
         <section class="details">
           <h2>Fabric</h2>
@@ -90,8 +107,22 @@
         </section>
       `;
       document.getElementById("garmentContainer").innerHTML = html;
-
     })();
+
+    // Simple slideshow controls
+    let slideIndex = 1;
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+    function showSlides(n) {
+      const slides = document.getElementsByClassName("slide");
+      if (!slides.length) return;
+      if (n > slides.length) slideIndex = 1;
+      if (n < 1) slideIndex = slides.length;
+      for (let s of slides) s.style.display = "none";
+      slides[slideIndex-1].style.display = "block";
+    }
+    document.addEventListener("DOMContentLoaded", () => showSlides(slideIndex));
   </script>
 </body>
 </html>
