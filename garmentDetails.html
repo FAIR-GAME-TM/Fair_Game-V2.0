@@ -57,7 +57,7 @@
         `/Images/techPack/t-shirt.webp`,
         `/Images/techPack/t-shirt2.webp`
       ];
-      const techDownload = g.techPackDownloadUrl || `/TechPacks/${tag}.ai`;
+      const techDownload = g.techPackDownloadUrl || `/TechPacks/Techpack.ai`;
 
       // Build HTML
       const html = `
@@ -107,6 +107,7 @@
         </section>
       `;
       document.getElementById("garmentContainer").innerHTML = html;
+      showSlides(1);
     })();
 
     // Simple slideshow controls
