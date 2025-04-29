@@ -1,4 +1,6 @@
 /* garmentDetails.css */
+/* 1) Pull in your global index.css (Doto font, resets, etc.) */
+@import url('index.css');
 
 /* Reset some default margins/padding */
 * {
@@ -14,13 +16,6 @@
     line-height: 1.6;
   }
   
-  /* Header styling for navigation if needed */
-  header {
-    background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
   
   /* Main content area styling */
   main {
