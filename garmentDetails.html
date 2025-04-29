@@ -54,10 +54,31 @@
 
       // ▷ TEMPORARY FALLBACK for tech-pack assets
       const techImages = g.techPackImages || [
-        `/Images/techPack/t-shirt.webp`,
-        `/Images/techPack/t-shirt2.webp`
+        `/images/techPack/t-shirt.webp`,
+        `/images/techPack/t-shirt2.webp`
       ];
       const techDownload = g.techPackDownloadUrl || `/TechPacks/Techpack.ai`;
+
+      // ▷ TEMPORARY FALLBACK for garment properties
+      const ft = g.fabricType || "Organic Cotton";
+      const fg = g.fabricGSM || "460 GSM";
+      const fm = g.fabricMaterial || "French Terry Cotton";
+      const fs = g.fabricSource || "Pakistan";
+      const fch = g.fabricColorHex || "#C42127";
+      const fcn = g.fabricColorName || "Antique Red";
+
+      const tt = g.threadType || "Two Thread Chainstitch";
+      const tw = g.threadWeight || "All purpose/Thread 50 Pt";
+      const tm = g.threadMaterial || "Cotton";
+      const ts = g.threadSource || "United States";
+      const tch = g.threadColorHex || "#000000";
+      const tcn = g.threadColorName || "Black";
+
+      const owner = g.owner || "dylan";
+      const qty = g.quantity || 1;
+      const price = g.price || "35.00";
+      const firstOpened = "4/26/2025";
+      const lastUpdated = "4/26/2025, 11:20:36 PM";
 
       // Build HTML
       const html = `
@@ -66,12 +87,12 @@
           ${techImages.map((img,i)=>
             `<img class="slide" src="${img}" alt="Tech Pack ${i+1}">`
           ).join("")}
-          <a class="prev" onclick="plusSlides(-1)">❮</a>
-          <a class="next" onclick="plusSlides(1)">❯</a>
+          <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+          <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </div>
 
         <!-- Download Tech Pack Button -->
-        <a href="${techDownload}" download class="download-button">Download Tech Pack</a>
+        <a href="${techDownload}" download class="download-button">Download Tech Pack (AI)</a>
 
         <h1>${g.garmentName}</h1>
 
@@ -81,28 +102,29 @@
         <section class="details">
           <h2>Fabric</h2>
           <ul>
-            <li><strong>Type:</strong> ${g.fabricType || "—"}</li>
-            <li><strong>GSM:</strong> ${g.fabricGSM || "—"}</li>
-            <li><strong>Color:</strong> ${g.fabricColorName || g.fabricColorHex || "—"}</li>
-            <li><strong>Source:</strong> ${g.fabricSource || "—"}</li>
+            <li><strong>Fabric Type:</strong> ${ft}</li>
+            <li><strong>Fabric GSM:</strong> ${fg}</li>
+            <li><strong>Fabric Material:</strong> ${fm}</li>
+            <li><strong>Fabric Source:</strong> ${fs}</li>
+            <li><strong>Fabric Color:</strong> <span class="color-swatch" style="display:inline-block;width:32px;height:16px;background-color:${fch};margin-right:8px;border:1px solid #ccc;"></span> ${fcn}</li>
           </ul>
 
           <h2>Thread</h2>
           <ul>
-            <li><strong>Type:</strong> ${g.threadType || "—"}</li>
-            <li><strong>Weight:</strong> ${g.threadWeight || "—"}</li>
-            <li><strong>Material:</strong> ${g.threadMaterial || "—"}</li>
-            <li><strong>Color:</strong> ${g.threadColorName || g.threadColorHex || "—"}</li>
-            <li><strong>Source:</strong> ${g.threadSource || "—"}</li>
+            <li><strong>Thread Type:</strong> ${tt}</li>
+            <li><strong>Thread Weight:</strong> ${tw}</li>
+            <li><strong>Thread Material:</strong> ${tm}</li>
+            <li><strong>Thread Source:</strong> ${ts}</li>
+            <li><strong>Thread Color:</strong> <span class="color-swatch" style="display:inline-block;width:32px;height:16px;background-color:${tch};margin-right:8px;border:1px solid #ccc;"></span> ${tcn}</li>
           </ul>
 
           <h2>Purchase Info</h2>
           <ul>
-            <li><strong>Purchased by:</strong> ${g.owner}</li>
-            <li><strong>Quantity:</strong> ${g.quantity}</li>
-            <li><strong>Price:</strong> $${g.price}</li>
-            <li><strong>First Opened:</strong> ${new Date(g.createdAt).toLocaleDateString()}</li>
-            <li><strong>Last Updated:</strong> ${new Date(g.updatedAt).toLocaleString()}</li>
+            <li><strong>Purchased by:</strong> ${owner}</li>
+            <li><strong>Quantity:</strong> ${qty}</li>
+            <li><strong>Price:</strong> $${price}</li>
+            <li><strong>First Opened:</strong> ${firstOpened}</li>
+            <li><strong>Last Updated:</strong> ${lastUpdated}</li>
           </ul>
         </section>
       `;
